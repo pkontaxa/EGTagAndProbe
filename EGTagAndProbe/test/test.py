@@ -4,7 +4,7 @@ import FWCore.ParameterSet.Config as cms
 process = cms.Process("TagAndProbe")
 
 isMC = True
-ISMINIAOD = False
+isMINIAOD = False
 
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 process.load("Configuration.StandardSequences.GeometryRecoDB_cff")
@@ -45,14 +45,14 @@ process.load("RecoEgamma.ElectronIdentification.ElectronMVAValueMapProducer_cfi"
 
 #**********************
 dataFormat = DataFormat.AOD
-if ISMINIAOD:
+if isMINIAOD:
     dataFormat = DataFormat.MiniAOD
 switchOnVIDElectronIdProducer(process, dataFormat)
 #**********************
 
 process.load("RecoEgamma.ElectronIdentification.egmGsfElectronIDs_cfi")
 # overwrite a default parameter: for miniAOD, the collection name is a slimmed one
-if ISMINIAOD:
+if isMINIAOD:
     process.egmGsfElectronIDs.physicsObjectSrc = cms.InputTag('slimmedElectrons')
 
 from PhysicsTools.SelectorUtils.centralIDRegistry import central_id_registry
@@ -115,7 +115,7 @@ else:
 
 
 
-if ISMINIAOD:
+if isMINIAOD:
     process.Ntuplizer.electrons = cms.InputTag("slimmedElectrons")
     process.Ntuplizer.genParticles = cms.InputTag("prunedGenParticles")
     process.Ntuplizer.Vertices = cms.InputTag("offlineSlimmedPrimaryVertices")
