@@ -1,0 +1,33 @@
+OutputFile: results/TestTurnOn/fitOutput.root
+NCPU: 4
+
+Turnon.N: 2
+
+
+Turnon.1.Name: Stage2_vs_Pt_35GeV_1
+Turnon.1.File: /data_CMS/cms/strebler/L1_eg/TandP_dev/CMSSW_9_1_0_pre3/src/EGTagAndProbe/EGTagAndProbe/test/Ntuples_dir/NTuple_1.root
+Turnon.1.Tree: Ntuplizer/TagAndProbe
+Turnon.1.XVar: eleProbeSclEt
+Turnon.1.Cut: hasL1_iso_40
+Turnon.1.Binning: 10., 30., 32., 34., 38., 39., 40., 42., 45., 50., 60., 70., 100., 200., 300., 400., 600., 1000., 2000.
+Turnon.1.FitRange: 0 200
+Turnon.1.CB.Max: 1. 0.6 1.
+Turnon.1.CB.Alpha: 7.4 0.01 80.
+Turnon.1.CB.N: 1.6 1.001 1000.
+Turnon.1.CB.Mean: 39. 0. 100.
+Turnon.1.CB.Sigma: 3.3 0.01 100
+
+
+Turnon.2.Name: Stage2_vs_Pt_35GeV_2
+Turnon.2.File: /data_CMS/cms/strebler/L1_eg/TandP_dev/CMSSW_9_1_0_pre3/src/EGTagAndProbe/EGTagAndProbe/test/Ntuples_dir/NTuple_test.root
+Turnon.2.Tree: Ntuplizer/TagAndProbe
+Turnon.2.XVar: eleProbeSclEt
+Turnon.2.Cut: hasL1_40
+Turnon.2.Binning: 10., 30., 32., 34., 38., 39., 40., 42., 45., 50., 60., 70., 100., 200., 300., 400., 600., 1000., 2000.
+Turnon.2.FitRange: 0 200
+Turnon.2.CB.Max: 1. 0.6 1.
+Turnon.2.CB.Alpha: 7.4 0.01 80.
+Turnon.2.CB.N: 1.6 1.001 1000.
+Turnon.2.CB.Mean: 39. 0. 100.
+Turnon.2.CB.Sigma: 3.3 0.01 100
+

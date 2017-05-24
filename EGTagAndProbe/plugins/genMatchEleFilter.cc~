@@ -1,0 +1,69 @@
+#ifndef GENMATCHELEFILTER_H
+#define GENMATCHELEFILTER_H
+
+#include "FWCore/Framework/interface/EDFilter.h"
+#include "FWCore/ParameterSet/interface/ParameterSet.h"
+#include <FWCore/Framework/interface/Frameworkfwd.h>
+#include <FWCore/Framework/interface/Event.h>
+#include <FWCore/Framework/interface/ESHandle.h>
+#include <FWCore/MessageLogger/interface/MessageLogger.h>
+#include <FWCore/Utilities/interface/InputTag.h>
+#include <DataFormats/PatCandidates/interface/Electron.h>
+#include "DataFormats/HepMCCandidate/interface/GenParticle.h"
+
+#include <iostream>
+
+using namespace edm;
+using namespace std;
+// using namespace reco;
+
+ 
+class genMatchEleFilter : public edm::EDFilter {
+
+    public:
+        genMatchEleFilter(const edm::ParameterSet &);
+        ~genMatchEleFilter();
+
+    private:
+        bool filter(edm::Event &, edm::EventSetup const&);
+        EDGetTokenT<pat::ElectronRefVector>  _eleTag;
+};
+
+genMatchEleFilter::genMatchEleFilter(const edm::ParameterSet & iConfig) :
+_eleTag   (consumes<pat::ElectronRefVector> (iConfig.getParameter<InputTag>("electrons")))
+{
+    produces <pat::ElectronRefVector>  ();
+}
+
+genMatchEleFilter::~genMatchEleFilter()
+{}
+
+bool genMatchEleFilter::filter(edm::Event & iEvent, edm::EventSetup const& iSetup)
+{
+
+    std::unique_ptr<pat::ElectronRefVector>  resultEle  ( new pat::ElectronRefVector  );
+    Handle<pat::ElectronRefVector> eleHandle;
+    iEvent.getByToken (_eleTag, eleHandle);
+
+    int goodEles = 0;
+    for (uint iele = 0; iele < eleHandle->size(); ++iele)
+    {
+        const pat::ElectronRef ele = (*eleHandle)[iele] ;    
+	const reco::GenParticle* genele= ele->genParticleRef().get();
+
+        if (genele && deltaR(ele->p4(), genele->p4()) < 0.3 && genele->pt() > 5.)
+        {
+            ++goodEles;
+            resultEle->push_back (ele);
+        }
+    }
+    if (goodEles == 0) return false;
+    
+    iEvent.put(std::move(resultEle));
+    return true;
+}
+
+#include <FWCore/Framework/interface/MakerMacros.h>
+DEFINE_FWK_MODULE(genMatchEleFilter);
+
+#endif
