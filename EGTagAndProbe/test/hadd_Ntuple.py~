@@ -1,7 +1,0 @@
-from subprocess import call
-
-command = "hadd NTuple.root "
-for(i in range(1000)):
-    command = command + " root://polgrid4.in2p3.fr//store/user/tstreble/TagAndProbeTrees/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/TagAndProbe_test/170512_102316/0000/NTuple_" + i + ".root"
-
-call(command)
