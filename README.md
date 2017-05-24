@@ -3,30 +3,41 @@ Set of tools to evaluate tau trigger performance on T&amp;P
 
 ### Install instructions
 ```
-cmsrel CMSSW_8_0_5
-cd CMSSW_8_0_5/src
+cmsrel CMSSW_9_1_0_pre3
+cd CMSSW_9_1_0_pre3/src
 cmsenv
-git clone https://github.com/l-cadamuro/TauTagAndProbe
+git clone https://github.com/tstreble/EGTagAndProbe
 scram b -j4
 ```
 
-### Tu run on MC (no t&P, select candidates by gen matching)
-```
-cmsrel CMSSW_7_6_3
-cd CMSSW_7_6_3/src
-cmsenv
-git clone https://github.com/l-cadamuro/TauTagAndProbe
-scram b -j4
-```
-then set isMC = True in test.py
+### Producing TagAndProbe ntuples with unpacked L1EG (no re-emulation)
+Set flag isMC and isMINIAOD according to sample in test/test.py
+HLT path used specified in python/MCAnalysis_cff.py (MC) or python/tagAndProbe_cff.py (data)
+Launch test.py
 
-### For L1 reemulation after T&P selections
+
+### Producing TagAndProbe ntuples with emulated L1EG
+Under development
+
+
+### Submit job on the Grid
+Modify crab3_config.py: change requestName, inputDataSet, outLFNDirBase, outputDatasetTag, storageSite
 ```
-cmsrel CMSSW_8_0_21
-cd cmsrel CMSSW_8_0_5/src
-cmsenv
-git cms-addpkg L1Trigger/L1TCalorimeter # only if you want to edit smt in the emulator
-git clone https://github.com/l-cadamuro/TauTagAndProbe
-scram b -j4
+cd CMSSW_9_1_0_pre3/src/EGTagAndProbe/EGTagAndProbe/test
+source /cvmfs/cms.cern.ch/crab3/crab.sh
+voms-proxy-init -voms cms
+crab submit -c crab3_config.py
 ```
-and use reEmulL1.py
+
+### Producing turn-on plots
+Create configuration file base on test/fitter/run/stage2_turnOnEG_fitter_test.par
+```
+cd CMSSW_9_1_0_pre3/src/EGTagAndProbe/EGTagAndProbe/test/fitter
+make clean; make
+./fit.exe run/stage2_turnOnEG_fitter_test.par
+```
+Create plotting script based on test/fitter/results/plot_EG_example.py
+```
+cd results
+python plot_EG_example.py
+```
