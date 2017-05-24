@@ -41,7 +41,7 @@ options.parseArguments()
 from PhysicsTools.SelectorUtils.tools.vid_id_tools import *
 
 process.load("RecoEgamma.ElectronIdentification.ElectronMVAValueMapProducer_cfi")
-#process.load("RecoEgamma.ElectronIdentification.ElectronRegressionValueMapProducer_cfi")
+
 
 #**********************
 dataFormat = DataFormat.AOD
@@ -71,7 +71,8 @@ my_id_modules =[
 'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring16_HZZ_V1_cff',   #Spring16 HZZ
 
 ] 
-#['RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Spring15_'+nanosec+'ns_V1_cff','RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_25ns_nonTrig_V1_cff']
+
+
 #Add them to the VID producer
 for idmod in my_id_modules:
     setupAllVIDIdsInModule(process,idmod,setupVIDElectronSelection)
@@ -111,9 +112,7 @@ else:
         )
     )
     process.Ntuplizer.useHLTMatch = cms.bool(False) #In case no HLT object in MC sample considered or you're fed up with trying to find the right HLT collections
-    process.Ntuplizer.useGenMatch = cms.bool(False)
-    process.Ntuplizer.eleLooseIdMap = cms.InputTag("egmGsfElectronIDs:cutBasedElectronID-Spring15-25ns-V1-standalone-loose")
-    process.Ntuplizer.eleMediumIdMap = cms.InputTag("egmGsfElectronIDs:cutBasedElectronID-Spring15-25ns-V1-standalone-medium")
+
 
 
 if ISMINIAOD:
