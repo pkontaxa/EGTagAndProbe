@@ -417,11 +417,12 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
 
       for (unsigned int j = 0; j< electrons->size(); ++j){
 
-	if(i==j) continue;
+	if(i==j) continue;	
 
 	const auto eleProbe = electrons->ptrAt(j);
 	int isProbeLoose = (*loose_id_decisions)[eleProbe];
-	if(!isProbeLoose) continue;
+	float eleProbeEta = eleProbe->p4().Eta();
+	if(!isProbeLoose || (abs(eleProbeEta)>1.4442 && abs(eleProbeEta)<1.566)) continue;
 
 	bool isOS = (eleTag->charge() / eleProbe->charge() < 0) ? true : false;
 	if(!isOS) continue;

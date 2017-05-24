@@ -383,8 +383,6 @@ void Ntuplizer_noTagAndProbe::analyze(const edm::Event& iEvent, const edm::Event
       
       const unsigned int i = distance (electrons->begin(), el);
       const auto eleTag = electrons->ptrAt(i);
-      int isTagID80 = (*medium_id_decisions)[eleTag];
-      if(!isTagID80) continue;
 
       for( edm::View<pat::Electron>::const_iterator el2 = electrons->begin(); el2 != electrons->end(); el2++){
 
@@ -392,8 +390,9 @@ void Ntuplizer_noTagAndProbe::analyze(const edm::Event& iEvent, const edm::Event
 	if(i==j) continue;
 
 	const auto eleProbe = electrons->ptrAt(j);
-	int isProbeID80 = (*loose_id_decisions)[eleProbe];
-	if(!isProbeID80) continue;
+	int isProbeLoose = (*loose_id_decisions)[eleProbe];
+	float eleProbeEta = eleProbe->p4().Eta();
+	if(!isProbeLoose || (abs(eleProbeEta)>1.4442 && abs(eleProbeEta)<1.566)) continue;
 
 	bool isOS = (eleTag->charge() / eleProbe->charge() < 0) ? true : false;
 	float Mee = (eleTag->p4() + eleProbe->p4()).M();
