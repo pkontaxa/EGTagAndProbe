@@ -5,7 +5,7 @@ from Configuration.StandardSequences.Eras import eras
 
 isMC = False
 isMINIAOD = True
-process = cms.Process("TagAndProbe",eras.Run2_2016)
+process = cms.Process("TagAndProbe",eras.Run2_2017)
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 process.load('Configuration.StandardSequences.RawToDigi_Data_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
@@ -18,7 +18,7 @@ process.load('Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cf
 
 
 options = VarParsing.VarParsing ('analysis')
-options.register ('secondaryFilesList','',VarParsing.VarParsing.multiplicity.singleton,VarParsing.VarParsing.varType.string,  "List of secondary input files")
+#options.register ('secondaryFilesList','',VarParsing.VarParsing.multiplicity.singleton,VarParsing.VarParsing.varType.string, "List of secondary input files")
 
 options.register ('skipEvents',
         -1, # default value
@@ -32,7 +32,7 @@ options.register ('JSONfile',
         "JSON file (empty for no JSON)")
 options.outputFile = 'NTuple.root'
 options.inputFiles = []
-options.maxEvents  = 1000 #-999
+options.maxEvents  = 1000
 
 options.parseArguments()
 
@@ -93,14 +93,14 @@ setattr(process,regMod,process.electronRegressionValueMapProducer.clone())
 setattr(process,egmSeq,cms.Sequence(getattr(process,mvaMod)*getattr(process,egmMod)*getattr(process,regMod)))
 process.electrons = cms.Sequence(getattr(process,mvaMod)*getattr(process,egmMod)*getattr(process,regMod))
 
-process.load('EGTagAndProbe.EGTagAndProbe.triggerProducer_cfi')
+#process.load('EGTagAndProbe.EGTagAndProbe.triggerProducer_cfi')
 
 import FWCore.Utilities.FileUtils as FileUtils
-listSecondaryFiles = FileUtils.loadListFromFile (options.secondaryFilesList)
+#listSecondaryFiles = FileUtils.loadListFromFile (options.secondaryFilesList)
 
 if not isMC: # will use 80X
     from Configuration.AlCa.autoCond import autoCond
-    process.GlobalTag.globaltag = '90X_dataRun2_v0'
+    process.GlobalTag.globaltag = '92X_dataRun2_Prompt_v8' #'90X_dataRun2_v0'  #'92X_dataRun2_Prompt_v8'
 
 #Martin's addition (not necessary for me)
 
@@ -115,11 +115,32 @@ if not isMC: # will use 80X
     process.load('EGTagAndProbe.EGTagAndProbe.tagAndProbe_cff')
     process.source = cms.Source("PoolSource",
             fileNames = cms.untracked.vstring(
+                 '/store/data/Run2017C/SingleElectron/MINIAOD/PromptReco-v3/000/300/777/00000/C499093F-BA7E-E711-9F4D-02163E013897.root'
                 #'/store/data/Run2017B/SingleElectron/MINIAOD/PromptReco-v1/000/297/050/00000/166F7BB0-3C56-E711-BD8B-02163E0145C5.root'
-                '/store/data/Run2017B/SingleElectron/MINIAOD/PromptReco-v1/000/297/057/00000/94987913-A256-E711-A484-02163E01A391.root' 
+                #'/store/data/Run2017B/SingleElectron/MINIAOD/PromptReco-v1/000/297/057/00000/94987913-A256-E711-A484-02163E01A391.root' 
                 ),
 
-            secondaryFileNames = cms.untracked.vstring(listSecondaryFiles)
+            secondaryFileNames = cms.untracked.vstring('/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/06506BFA-FB7C-E711-B01B-02163E01A2A1.root',
+'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/0CEB47FF-FB7C-E711-9BB5-02163E011E6F.root',
+'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/24153D18-FC7C-E711-913C-02163E01A708.root',
+'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/724E931C-FC7C-E711-8A9C-02163E012118.root',
+'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/7AE81D09-FC7C-E711-B76A-02163E019B73.root',
+'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/A42EC9FC-FB7C-E711-8935-02163E0133E0.root',
+'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/B48FEC08-FC7C-E711-8344-02163E011C48.root',
+'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/C67421FB-FB7C-E711-A22D-02163E019BC5.root',
+'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/CA10D321-FC7C-E711-BB02-02163E0125F5.root',
+'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/CA125336-FC7C-E711-ADFA-02163E013820.root',
+'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/CC031C16-FC7C-E711-8E27-02163E0144EC.root',
+'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/CE296BF9-FB7C-E711-88A1-02163E01341D.root',
+'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/CE3E5B03-FC7C-E711-9171-02163E01A469.root',
+'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/CE8E0824-FC7C-E711-8F04-02163E014330.root',
+'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/D631951E-0B7D-E711-83D3-02163E0143E5.root',
+'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/DE7D7A17-FC7C-E711-A5D0-02163E01A6F3.root',
+
+)
+
+
+
             #secondaryFileNames = cms.untracked.vstring('file:AA918EB1-6E64-E611-9BE0-00259074AE54.root')
             #'/store/mc/RunIISpring16MiniAODv2/GluGluHToTauTau_M125_13TeV_powheg_pythia8/MINIAODSIM/FlatPU20to70HcalNZSRAW_withHLT_80X_mcRun2_asymptotic_v14-v1/50000/302E52FC-8567-E611-B2AA-0CC47A703326.root',
             #),
@@ -146,6 +167,21 @@ if not isMC: # will use 80X
 
     #process.source.eventsToProcess = cms.untracked.VEventRange('281613:108:12854629')
     #process.source.eventsToProcess = cms.untracked.VEventRange('274199:353:670607108')
+
+
+
+########################################## Addition for Ntuples ###################################### 
+
+if isMINIAOD:
+       process.Ntuplizer.electrons = cms.InputTag("slimmedElectrons")
+       process.Ntuplizer.genParticles = cms.InputTag("prunedGenParticles")
+       process.Ntuplizer.Vertices = cms.InputTag("offlineSlimmedPrimaryVertices")
+      
+      # process.Ntuplizer.triggerSet = cms.InputTag("slimmedPatTrigger","","RECO")
+
+######################################################################################################
+
+
 
 else:
     #process.GlobalTag.globaltag = 'auto:run2_mc' #MC 25 ns miniAODv2
@@ -185,7 +221,7 @@ else:
     from L1Trigger.Configuration.customiseUtils import L1TTurnOffUnpackStage2GtGmtAndCalo 
     process = L1TTurnOffUnpackStage2GtGmtAndCalo(process)
 
-process.load("L1Trigger.L1TCalorimeter.caloStage2Params_2016_v3_2_cfi")
+process.load("L1Trigger.L1TCalorimeter.caloStage2Params_2017_v1_8_3_updateHFSF_v7MET_cfi")
 
 #### handling of cms line options for tier3 submission
 #### the following are dummy defaults, so that one can normally use the config changing file list by hand etc.
@@ -216,8 +252,8 @@ process.p = cms.Path (
         process.electrons +
         process.RawToDigi +
         process.L1TReEmul +
-        process.patTriggerSeq + 
-        process.NtupleSeq
+        process.NtupleSeq #+
+       # process.patTriggerSeq        
         )
 process.schedule = cms.Schedule(process.p) # do my sequence pls
 
