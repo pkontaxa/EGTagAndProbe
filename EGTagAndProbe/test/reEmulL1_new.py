@@ -13,7 +13,7 @@ process.load('Configuration.StandardSequences.Services_cff')
 process.load('SimGeneral.HepPDTESSource.pythiapdt_cfi')
 process.load('FWCore.MessageService.MessageLogger_cfi')
 process.load('Configuration.EventContent.EventContent_cff')
-process.load('Configuration.Geometry.GeometryExtended2016Reco_cff')
+process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cff')
 
 
@@ -32,7 +32,7 @@ options.register ('JSONfile',
         "JSON file (empty for no JSON)")
 options.outputFile = 'NTuple.root'
 options.inputFiles = []
-options.maxEvents  = 1000
+options.maxEvents  = -999
 
 options.parseArguments()
 
@@ -113,30 +113,29 @@ if not isMC: # will use 80X
           #      connect =cms.string('sqlite_file:/home/llr/cms/novoa/PedestalCond/EcalTPG_280026_moved_to_1_Ped_161310.db')))
 
     process.load('EGTagAndProbe.EGTagAndProbe.tagAndProbe_cff')
-    process.source = cms.Source("PoolSource",
-            fileNames = cms.untracked.vstring(
-                 '/store/data/Run2017C/SingleElectron/MINIAOD/PromptReco-v3/000/300/777/00000/C499093F-BA7E-E711-9F4D-02163E013897.root'
+    process.source = cms.Source("PoolSource"#,
+    #        fileNames = cms.untracked.vstring(
+   #              '/store/data/Run2017C/SingleElectron/MINIAOD/PromptReco-v3/000/300/777/00000/C499093F-BA7E-E711-9F4D-02163E013897.root'
                 #'/store/data/Run2017B/SingleElectron/MINIAOD/PromptReco-v1/000/297/050/00000/166F7BB0-3C56-E711-BD8B-02163E0145C5.root'
                 #'/store/data/Run2017B/SingleElectron/MINIAOD/PromptReco-v1/000/297/057/00000/94987913-A256-E711-A484-02163E01A391.root' 
-                ),
+#                ),
 
-            secondaryFileNames = cms.untracked.vstring('/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/06506BFA-FB7C-E711-B01B-02163E01A2A1.root',
-'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/0CEB47FF-FB7C-E711-9BB5-02163E011E6F.root',
-'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/24153D18-FC7C-E711-913C-02163E01A708.root',
-'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/724E931C-FC7C-E711-8A9C-02163E012118.root',
-'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/7AE81D09-FC7C-E711-B76A-02163E019B73.root',
-'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/A42EC9FC-FB7C-E711-8935-02163E0133E0.root',
-'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/B48FEC08-FC7C-E711-8344-02163E011C48.root',
-'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/C67421FB-FB7C-E711-A22D-02163E019BC5.root',
-'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/CA10D321-FC7C-E711-BB02-02163E0125F5.root',
-'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/CA125336-FC7C-E711-ADFA-02163E013820.root',
-'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/CC031C16-FC7C-E711-8E27-02163E0144EC.root',
-'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/CE296BF9-FB7C-E711-88A1-02163E01341D.root',
-'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/CE3E5B03-FC7C-E711-9171-02163E01A469.root',
-'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/CE8E0824-FC7C-E711-8F04-02163E014330.root',
-'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/D631951E-0B7D-E711-83D3-02163E0143E5.root',
-'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/DE7D7A17-FC7C-E711-A5D0-02163E01A6F3.root',
-
+#            secondaryFileNames = cms.untracked.vstring(listSecondaryFiles)#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/06506BFA-FB7C-E711-B01B-02163E01A2A1.root',
+#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/0CEB47FF-FB7C-E711-9BB5-02163E011E6F.root',
+#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/24153D18-FC7C-E711-913C-02163E01A708.root',
+#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/724E931C-FC7C-E711-8A9C-02163E012118.root',
+#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/7AE81D09-FC7C-E711-B76A-02163E019B73.root',
+#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/A42EC9FC-FB7C-E711-8935-02163E0133E0.root',
+#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/B48FEC08-FC7C-E711-8344-02163E011C48.root',
+#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/C67421FB-FB7C-E711-A22D-02163E019BC5.root',
+#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/CA10D321-FC7C-E711-BB02-02163E0125F5.root',
+#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/CA125336-FC7C-E711-ADFA-02163E013820.root',
+#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/CC031C16-FC7C-E711-8E27-02163E0144EC.root',
+#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/CE296BF9-FB7C-E711-88A1-02163E01341D.root',
+#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/CE3E5B03-FC7C-E711-9171-02163E01A469.root',
+#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/CE8E0824-FC7C-E711-8F04-02163E014330.root',
+#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/D631951E-0B7D-E711-83D3-02163E0143E5.root',
+#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/DE7D7A17-FC7C-E711-A5D0-02163E01A6F3.root'
 )
 
 
@@ -163,7 +162,7 @@ if not isMC: # will use 80X
             #            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/E8FD1844-5E26-E611-B99E-02163E0146CB.root',
             #            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/F8B44816-5E26-E611-A87A-02163E011E74.root',
             #        ) 
-            )
+            #)
 
     #process.source.eventsToProcess = cms.untracked.VEventRange('281613:108:12854629')
     #process.source.eventsToProcess = cms.untracked.VEventRange('274199:353:670607108')
@@ -194,7 +193,7 @@ else:
                 #'/store/mc/RunIISpring16DR80/GluGluHToTauTau_M125_13TeV_powheg_pythia8/GEN-SIM-RAW/FlatPU20to70HcalNZSRAW_withHLT_80X_mcRun2_asymptotic_v14-v1/40000/AA918EB1-6E64-E611-9BE0-00259074AE54.root'
                 '/store/mc/RunIISpring16MiniAODv2/GluGluHToTauTau_M125_13TeV_powheg_pythia8/MINIAODSIM/FlatPU20to70HcalNZSRAW_withHLT_80X_mcRun2_asymptotic_v14-v1/50000/1A13CB76-9B67-E611-A143-0050560210EC.root'
                 ),
-            secondaryFileNames = cms.untracked.vstring(listSecondaryFiles)
+            #secondaryFileNames = cms.untracked.vstring(listSecondaryFiles)
             #'/store/mc/RunIISummer15GS/GluGluHToTauTau_M125_13TeV_powheg_pythia8/GEN-SIM/MCRUN2_71_V1-v1/00000/08D2C535-5458-E511-B0C0-FA163E83549A.root'
             #'/store/mc/RunIISummer15GS/GluGluHToTauTau_M125_13TeV_powheg_pythia8/GEN-SIM/MCRUN2_71_V1-v1/10000/8A2D3925-4658-E511-80B2-02163E014126.root',
             #'/store/mc/RunIISummer15GS/GluGluHToTauTau_M125_13TeV_powheg_pythia8/GEN-SIM/MCRUN2_71_V1-v1/10000/ECB7FC03-8058-E511-BE9D-02163E0141A2.root',
@@ -248,13 +247,35 @@ process.options = cms.untracked.PSet(
         wantSummary = cms.untracked.bool(True)
         )
 
+ 
 process.p = cms.Path (
         process.electrons +
         process.RawToDigi +
         process.L1TReEmul +
         process.NtupleSeq #+
-       # process.patTriggerSeq        
+        #process.patTriggerSeq        
         )
+
+
+'''
+## Pantelis
+process.p = cms.Path(process.electrons)
+print("after process.electrons")
+process.p = cms.Path(process.RawToDigi)
+print("after process.RawToDigi")
+process.p = cms.Path(process.L1TReEmul)
+print("after process.L1TReEmul")
+process.p = cms.Path(process.NtupleSeq)
+print("after process.NtupleSeq")
+'''
+
+
+
+
+
+ 
+
+
 process.schedule = cms.Schedule(process.p) # do my sequence pls
 
 # Silence output
