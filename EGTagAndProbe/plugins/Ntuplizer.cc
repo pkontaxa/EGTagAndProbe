@@ -97,6 +97,12 @@ class Ntuplizer : public edm::EDAnalyzer {
 
 		/////////////////////////////////////////////////////////////////
 
+ 
+                /////////////////////// Pantelis offline ID selections //////////
+                int _isProbeLoose;
+                int _isProbeTight;
+                int _isProbeMedium;
+                ////////////////////////////////////////////////////////////////
 
 		float _eleProbePt;
 		// std::vector<float> _eleProbePt; 
@@ -140,9 +146,22 @@ class Ntuplizer : public edm::EDAnalyzer {
 		int _hasL1[100];
 		int _hasL1_iso[100];
 
+                ///////////////////////////////////////////////// Pantelis Emulator //////////////////////////////////////////////////
+                int _hasL1Emu[100];
+                int _hasL1Emu_iso[100];
+                int _hasL1_looseiso[100];
+                int _hasL1Emu_looseiso[100];
+                int _hasL1_tightiso[100];
+                int _hasL1Emu_tightiso[100];
+                /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 		edm::EDGetTokenT<edm::View<reco::GsfElectron> >  _electronsTag;
 		edm::EDGetTokenT<edm::View<reco::GenParticle> > _genParticlesTag;
 		edm::EDGetTokenT<edm::ValueMap<bool> > _eleLooseIdMapTag;
+                //////////////////////////////////// Pantelis TightIDs //////////////////////////////////////////////////////////////
+                edm::EDGetTokenT<edm::ValueMap<bool> > _eleTightIdMapTag;
+                //edm::EDGetTokenT<edm::ValueMap<bool> > _eleMediumIdMapTag;
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		edm::EDGetTokenT<edm::ValueMap<bool> > _eleMediumIdMapTag;
 		edm::EDGetTokenT<pat::TriggerObjectStandAloneCollection> _triggerObjects;
 		edm::EDGetTokenT<edm::TriggerResults> _triggerBits;
@@ -182,6 +201,10 @@ Ntuplizer::Ntuplizer(const edm::ParameterSet& iConfig) :
 	_electronsTag       (consumes<edm::View<reco::GsfElectron> >                     (iConfig.getParameter<edm::InputTag>("electrons"))),
 	_genParticlesTag (consumes<edm::View<reco::GenParticle> > (iConfig.getParameter<edm::InputTag>("genParticles"))),
 	_eleLooseIdMapTag  (consumes<edm::ValueMap<bool> >(iConfig.getParameter<edm::InputTag>("eleLooseIdMap"))),
+        /////////////////////////////// Pantelis TightIDs ////////////////////////////////////////////////////////////////////////////////
+        _eleTightIdMapTag  (consumes<edm::ValueMap<bool> >(iConfig.getParameter<edm::InputTag>("eleTightIdMap"))),
+        //_eleMediumIdMapTag  (consumes<edm::ValueMap<bool> >(iConfig.getParameter<edm::InputTag>("eleMediumIdMap"))),
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	_eleMediumIdMapTag  (consumes<edm::ValueMap<bool> >(iConfig.getParameter<edm::InputTag>("eleMediumIdMap"))),
 	_triggerObjects (consumes<pat::TriggerObjectStandAloneCollection> (iConfig.getParameter<edm::InputTag>("triggerSet"))),
 	_triggerBits    (consumes<edm::TriggerResults>                    (iConfig.getParameter<edm::InputTag>("triggerResultsLabel"))),
@@ -331,8 +354,11 @@ void Ntuplizer::Initialize() {
 
 	this -> _allEl_Size = -1;
 
-
-
+        //////////////////////////////
+        this -> _isProbeLoose = -1;
+        this -> _isProbeTight = -1;
+        this -> _isProbeMedium = -1;
+        ////////////////////////////// 
 
 
 	//////////////////////////////////////////////
@@ -341,6 +367,18 @@ void Ntuplizer::Initialize() {
 		this -> _hasL1[i] = -1;
 		this -> _hasL1_iso[i] = -1;
 	}
+
+       ////////////////////// Pantelis Emulator /////////////////////////////
+        for(unsigned int i=0;i<100;i++){
+                this -> _hasL1Emu[i] = -1;
+                this -> _hasL1Emu_iso[i] = -1;
+                this -> _hasL1_looseiso[i] = -1;
+                this -> _hasL1Emu_looseiso[i] = -1;
+                this -> _hasL1_tightiso[i] = -1;
+                this -> _hasL1Emu_tightiso[i] =-1;
+                
+        }
+       /////////////////////////////////////////////////////////////////////
 
 }
 
@@ -384,7 +422,13 @@ void Ntuplizer::beginJob()
 	this -> _tree -> Branch("l1tEmuTowerIPhi", &_l1tEmuTowerIPhi, "l1tEmuTowerIPhi/I");
 	this -> _tree -> Branch("l1tEmuRawEt", &_l1tEmuRawEt, "l1tEmuRawEt/I");
 	this -> _tree -> Branch("l1tEmuIsoEt", &_l1tEmuIsoEt, "l1tEmuIsoEt/I");
-
+        
+        ////////////////////////////////// Pantelis offlineIDs Branches ///////////////////////////
+        this -> _tree -> Branch("isProbeLoose", &_isProbeLoose);
+        this -> _tree -> Branch("isProbeTight", &_isProbeTight);
+        this -> _tree -> Branch("isProbeMedium", &_isProbeMedium);
+        ///////////////////////////////////////////////////////////////////////////////////////////  
+         
 	///////////////////////////////All Electrons////////////////////////////////////////////////
 	this -> _tree -> Branch("allEl_Pt", &_allEl_Pt);//, "allElectonsPt/array");
 	this -> _tree -> Branch("allEl_Eta", &_allEl_Eta);//, "allElectonsEta/array");
@@ -411,7 +455,27 @@ void Ntuplizer::beginJob()
 		this -> _tree -> Branch(name,  &_hasL1[i],  name+"/I");
 		TString name_iso = Form("hasL1_iso_%i",i);
 		this -> _tree -> Branch(name_iso,  &_hasL1_iso[i],  name_iso+"/I");
+                TString name_looseiso = Form("hasL1_looseiso_%i",i);
+                this -> _tree -> Branch(name_looseiso,  &_hasL1_looseiso[i],  name_looseiso+"/I");
+                TString name_tightiso = Form("hasL1_tightiso_%i",i);
+                this -> _tree -> Branch(name_tightiso,  &_hasL1_tightiso[i],  name_tightiso+"/I");
+
+
 	}
+        
+        /////////////////////////////// Pantelis Emulator /////////////////////////
+        for (unsigned int i=0;i<100;i++){
+                TString name = Form("hasL1Emu_%i",i);
+                this -> _tree -> Branch(name, &_hasL1Emu[i], name+"/I");
+                TString name_iso = Form("hasL1Emu_iso%i",i);
+                this -> _tree -> Branch(name_iso, &_hasL1Emu_iso[i], name_iso+"/I");
+                TString name_looseiso = Form("hasL1Emu_looseiso%i",i);
+                this -> _tree -> Branch(name_looseiso, &_hasL1Emu_looseiso[i], name_looseiso+"/I"); 
+                TString name_tightiso = Form("hasL1Emu_tightiso%i",i);
+                this -> _tree -> Branch(name_tightiso, &_hasL1Emu_tightiso[i], name_tightiso+"/I");
+         }  
+        
+        //////////////////////////////////////////////////////////////////////////
 
 	return;
 }
@@ -436,6 +500,10 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
 	edm::Handle<edm::View<reco::GsfElectron> > electrons;
 	edm::Handle<edm::View<reco::GenParticle> > genParticles;
 	edm::Handle<edm::ValueMap<bool> > loose_id_decisions;
+        ///////////////////////////// Pantelis TightIDs /////////////////////////////////////////////////////////////////////////////////
+        edm::Handle<edm::ValueMap<bool> > tight_id_decisions;
+        //edm::Handle<edm::ValueMap<bool> > medium_id_decisions;
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	edm::Handle<edm::ValueMap<bool> > medium_id_decisions;
 	edm::Handle<pat::TriggerObjectStandAloneCollection> triggerObjects;
 	edm::Handle<edm::TriggerResults> triggerBits;
@@ -443,6 +511,11 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
 
 	iEvent.getByToken(this -> _electronsTag, electrons);
 	iEvent.getByToken(this -> _eleLooseIdMapTag, loose_id_decisions);
+        /////////////////////////////// Pantelis TightIDs ////////////////////////////////////////////////////////////////////////////////
+        iEvent.getByToken(this -> _eleTightIdMapTag, tight_id_decisions); 
+        //iEvent.getByToken(this -> _eleMediumIdMapTag, medium_id_decisions);
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	iEvent.getByToken(this -> _eleMediumIdMapTag, medium_id_decisions);
 	if(this->_useHLTMatch)
 		iEvent.getByToken(this -> _triggerObjects, triggerObjects);
@@ -495,8 +568,25 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
             
 			const auto eleProbe = electrons->ptrAt(j);
 			int isProbeLoose = (*loose_id_decisions)[eleProbe];
+                        
+                        //////////////////////// Pantelis ///////////////////
+                        
+                        //cout<<"eleProbe->SuperCluster()->eta(): "<<eleProbe->superCluster()->eta()<<endl;
+                       // cout<<"eleProbe->SuperCluster()->phi(): "<<eleProbe->superCluster()->phi()<<endl; 
+                         
+                        int isProbeLoose2 = (*loose_id_decisions)[eleProbe];
+                        int isProbeTight = (*tight_id_decisions)[eleProbe];
+                        int isProbeMedium =(*medium_id_decisions)[eleProbe];
+                        this -> _isProbeLoose = isProbeLoose2;
+                        this -> _isProbeTight = isProbeTight;
+                        this -> _isProbeMedium = isProbeMedium;
+                        ////////////////////////////////////////////////////
+
+                        //cout<< "isProbeLoose2: "<< isProbeLoose2<<endl;
+                        //cout<< "isProbeMedium: "<< isProbeMedium<<endl;
+
 			float eleProbeEta = eleProbe->p4().Eta();
-			if(!isProbeLoose || (abs(eleProbeEta)>1.4442 && abs(eleProbeEta)<1.566)) continue;
+			if((abs(eleProbeEta)>1.4442 && abs(eleProbeEta)<1.566)) continue;
 
 			bool isOS = (eleTag->charge() / eleProbe->charge() < 0) ? true : false;
 			if(!isOS) continue;
@@ -565,6 +655,9 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
 
 
 					const float dR_probe = deltaR (*eleProbe, obj);
+                                 //       if (eleProbe->superCluster()->eta()>=-1.92324 && (eleProbe->superCluster()->eta()<=-1.92322)){
+                                   //     cout<<"dR_probe: "<<dR_probe<<endl;
+                                     //   }
 					if ( dR_probe < 0.3)
 					{
 						this -> _isProbeHLTmatched = true;
@@ -625,12 +718,13 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
                              this -> _allL1tQual.push_back(l1tEG.hwQual());
 
                         }
-                        //////////////////////////////////////////////////////////////////////////////////////////
+                        ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 			for (l1t::EGammaBxCollection::const_iterator bx0EGIt = L1EGHandle->begin(0); bx0EGIt != L1EGHandle->end(0) ; bx0EGIt++)
 			{
 				const float dR = deltaR(*eleProbe, *bx0EGIt);
+                              //  cout<<"dR: "<<dR<<endl;
 				const l1t::EGamma& l1tEG = *bx0EGIt;
 
 				cout<<"FW EG, pT = "<<l1tEG.pt()<<", eta = "<<l1tEG.eta()<<", phi = "<<l1tEG.phi()<<endl;
@@ -639,6 +733,7 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
 				{
 					minDR = dR; //Uncomment for new match algo
 					this -> _l1tPt = l1tEG.pt();
+                                      //  cout<< "_l1tPt"<< _l1tPt<<endl;
 					this -> _l1tEta = l1tEG.eta();
 					this -> _l1tPhi = l1tEG.phi();
 					this -> _l1tIso = l1tEG.hwIso();
@@ -649,6 +744,9 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
 			for(unsigned int i=0;i<100;i++){
 				this -> _hasL1[i] = (this -> _l1tPt)>=i;
 				this -> _hasL1_iso[i] = ((this -> _l1tIso) && (this -> _l1tPt)>=i);
+                                this -> _hasL1_looseiso[i] = (((this -> _l1tIso)==2 || (this -> _l1tIso)==3) && (this -> _l1tPt)>=i);
+                                this -> _hasL1_tightiso[i] = (((this -> _l1tIso)==1 || (this -> _l1tIso)==3) && (this -> _l1tPt)>=i);
+
 			}
 
 			edm::Handle< BXVector<l1t::EGamma> >  L1EmuEGHandle;
@@ -681,6 +779,17 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
 
 					}
 				}
+                      
+                          ///////////////////////// Pantelis Emulator ////////////////////////////////////////
+                          for(unsigned int i=0;i<100;i++){
+                                  this -> _hasL1Emu[i] = (this -> _l1tEmuPt)>=i;
+                                  this -> _hasL1Emu_iso[i] = ((this -> _l1tEmuIso) && ( this -> _l1tEmuPt)>=i);
+                                  this -> _hasL1Emu_looseiso[i] = (((this -> _l1tEmuIso)==2 || (this -> _l1tEmuIso)==3) && (this -> _l1tEmuPt)>=i);
+                                  this -> _hasL1Emu_tightiso[i] = (((this -> _l1tEmuIso)==1 || (this -> _l1tEmuIso)==3) && (this -> _l1tEmuPt)>=i);
+
+                          } 
+                          ////////////////////////////////////////////////////////////////////////////////////
+                        
 			}
 
 			this -> _eleProbePt = eleProbe->pt();
