@@ -113,14 +113,16 @@ if not isMC: # will use 80X
           #      connect =cms.string('sqlite_file:/home/llr/cms/novoa/PedestalCond/EcalTPG_280026_moved_to_1_Ped_161310.db')))
 
     process.load('EGTagAndProbe.EGTagAndProbe.tagAndProbe_cff')
-    process.source = cms.Source("PoolSource"#,
-    #        fileNames = cms.untracked.vstring(
-   #              '/store/data/Run2017C/SingleElectron/MINIAOD/PromptReco-v3/000/300/777/00000/C499093F-BA7E-E711-9F4D-02163E013897.root'
+    process.source = cms.Source("PoolSource",
+            fileNames = cms.untracked.vstring(
+                 '/store/data/Run2017C/SingleElectron/MINIAOD/PromptReco-v3/000/300/777/00000/C499093F-BA7E-E711-9F4D-02163E013897.root'
                 #'/store/data/Run2017B/SingleElectron/MINIAOD/PromptReco-v1/000/297/050/00000/166F7BB0-3C56-E711-BD8B-02163E0145C5.root'
                 #'/store/data/Run2017B/SingleElectron/MINIAOD/PromptReco-v1/000/297/057/00000/94987913-A256-E711-A484-02163E01A391.root' 
-#                ),
+                ),
 
-#            secondaryFileNames = cms.untracked.vstring(listSecondaryFiles)#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/06506BFA-FB7C-E711-B01B-02163E01A2A1.root',
+            #secondaryFileNames = cms.untracked.vstring(listSecondaryFiles)
+
+#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/06506BFA-FB7C-E711-B01B-02163E01A2A1.root',
 #'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/0CEB47FF-FB7C-E711-9BB5-02163E011E6F.root',
 #'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/24153D18-FC7C-E711-913C-02163E01A708.root',
 #'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/724E931C-FC7C-E711-8A9C-02163E012118.root',
@@ -136,7 +138,7 @@ if not isMC: # will use 80X
 #'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/CE8E0824-FC7C-E711-8F04-02163E014330.root',
 #'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/D631951E-0B7D-E711-83D3-02163E0143E5.root',
 #'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/DE7D7A17-FC7C-E711-A5D0-02163E01A6F3.root'
-)
+#)
 
 
 
@@ -162,7 +164,7 @@ if not isMC: # will use 80X
             #            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/E8FD1844-5E26-E611-B99E-02163E0146CB.root',
             #            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/F8B44816-5E26-E611-A87A-02163E011E74.root',
             #        ) 
-            #)
+            )
 
     #process.source.eventsToProcess = cms.untracked.VEventRange('281613:108:12854629')
     #process.source.eventsToProcess = cms.untracked.VEventRange('274199:353:670607108')
