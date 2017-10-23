@@ -38,15 +38,27 @@ hltFilter = hlt.hltHighLevel.clone(
     throw = cms.bool(True) #if True: throws exception if a trigger path is invalid
 )
 
+################################### Pantelis ########################################
+patTriggerUnpacker = cms.EDProducer("PATTriggerObjectStandAloneUnpacker",
+                                    patTriggerObjectsStandAlone = cms.InputTag("slimmedPatTrigger"),
+                                    triggerResults = cms.InputTag('TriggerResults', '', "HLT"),
+                                    unpackFilterLabels = cms.bool(True)
+)
 
-
+####################################################################################
 Ntuplizer = cms.EDAnalyzer("Ntuplizer",
     treeName = cms.string("TagAndProbe"),
     electrons = cms.InputTag("gedGsfElectrons"),
     genParticles = cms.InputTag("genParticles"),                       
     eleMediumIdMap = cms.InputTag("egmGsfElectronIDs:mvaEleID-Spring16-GeneralPurpose-V1-wp90"),
+    eleTightIdMap = cms.InputTag("egmGsfElectronIDs:mvaEleID-Spring16-GeneralPurpose-V1-wp80"),
     eleLooseIdMap = cms.InputTag("egmGsfElectronIDs:mvaEleID-Spring16-HZZ-V1-wpLoose"),
-    triggerSet = cms.InputTag("selectedPatTrigger","","RECO"),
+  ########################### Pantelis ###################################################  
+   # triggerSet = cms.InputTag("selectedPatTrigger","","RECO"),
+   # triggerSet = cms.InputTag("slimmedPatTrigger","","RECO"),
+    triggerSet = cms.InputTag("patTriggerUnpacker"),
+  #######################################################################################
+
     triggerResultsLabel = cms.InputTag("TriggerResults", "", "HLT"),   
     L1EG = cms.InputTag("caloStage2Digis", "EGamma", "RECO"),
     L1EmuEG = cms.InputTag("simCaloStage2Digis", "MP"),
@@ -59,5 +71,6 @@ Ntuplizer = cms.EDAnalyzer("Ntuplizer",
 
 NtupleSeq = cms.Sequence(
     hltFilter        +
+    patTriggerUnpacker +
     Ntuplizer
 )
