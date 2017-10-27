@@ -97,7 +97,7 @@ class Ntuplizer : public edm::EDAnalyzer {
 		/////////////////////////////////////////////////////////////////
 
  
-                /////////////////////// Pantelis offline ID selections & DeltaR & SeedTowerEt //////////
+                /////////////////////// Pantelis offline ID selections & DeltaR & SeedTowerEt & TowerHoE //////////
                 int _isProbeLoose;
                 int _isProbeTight;
                 int _isProbeMedium;
@@ -106,6 +106,8 @@ class Ntuplizer : public edm::EDAnalyzer {
                 float _Emulated_dR;
 
                 int _seedTowerEt;
+                
+                int _TowerHoE;     
                 ////////////////////////////////////////////////////////////////
 
 		float _eleProbePt;
@@ -367,6 +369,8 @@ void Ntuplizer::Initialize() {
         this -> _Emulated_dR = -1;
 
         this -> _seedTowerEt = -1;
+      
+        this ->_TowerHoE = -1;
         ////////////////////////////// 
 
 
@@ -441,6 +445,8 @@ void Ntuplizer::beginJob()
         this -> _tree -> Branch("EmulatedDR", &_Emulated_dR);
 
         this -> _tree -> Branch("seedTowerEt", &_seedTowerEt);
+   
+        this -> _tree -> Branch("TowerHoE", &_TowerHoE);
         ///////////////////////////////////////////////////////////////////////////////////////////  
          
 	///////////////////////////////All Electrons////////////////////////////////////////////////
@@ -581,7 +587,7 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
   
             
 			const auto eleProbe = electrons->ptrAt(j);
-			int isProbeLoose = (*loose_id_decisions)[eleProbe];
+			//int isProbeLoose = (*loose_id_decisions)[eleProbe];
                         
                         //////////////////////// Pantelis ///////////////////
                         
@@ -798,7 +804,9 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
 						this -> _l1tEmuRawEt     = l1tEmuEG.rawEt();
 						this -> _l1tEmuIsoEt     = l1tEmuEG.isoEt();
                                                 
-                                                //this -> _seedTowerEt     = l1tEmuEG.seedTowerEt();   
+                                                this -> _seedTowerEt     = l1tEmuEG.seedTowerEt(); 
+ 
+                                                this -> _TowerHoE        = l1tEmuEG.towerHoE();  
 					}
 				}
                       
