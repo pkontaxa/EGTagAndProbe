@@ -33,7 +33,6 @@
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 
 
-
 //Set this variable to decide the number of triggers that you want to check simultaneously
 #define NUMBER_OF_MAXIMUM_TRIGGERS 64
 
@@ -98,10 +97,15 @@ class Ntuplizer : public edm::EDAnalyzer {
 		/////////////////////////////////////////////////////////////////
 
  
-                /////////////////////// Pantelis offline ID selections //////////
+                /////////////////////// Pantelis offline ID selections & DeltaR & SeedTowerEt //////////
                 int _isProbeLoose;
                 int _isProbeTight;
                 int _isProbeMedium;
+
+                float _Unpacked_dR;
+                float _Emulated_dR;
+
+                int _seedTowerEt;
                 ////////////////////////////////////////////////////////////////
 
 		float _eleProbePt;
@@ -358,6 +362,11 @@ void Ntuplizer::Initialize() {
         this -> _isProbeLoose = -1;
         this -> _isProbeTight = -1;
         this -> _isProbeMedium = -1;
+
+        this -> _Unpacked_dR = -1;
+        this -> _Emulated_dR = -1;
+
+        this -> _seedTowerEt = -1;
         ////////////////////////////// 
 
 
@@ -427,6 +436,11 @@ void Ntuplizer::beginJob()
         this -> _tree -> Branch("isProbeLoose", &_isProbeLoose);
         this -> _tree -> Branch("isProbeTight", &_isProbeTight);
         this -> _tree -> Branch("isProbeMedium", &_isProbeMedium);
+
+        this -> _tree -> Branch("UnpackedDR", &_Unpacked_dR);
+        this -> _tree -> Branch("EmulatedDR", &_Emulated_dR);
+
+        this -> _tree -> Branch("seedTowerEt", &_seedTowerEt);
         ///////////////////////////////////////////////////////////////////////////////////////////  
          
 	///////////////////////////////All Electrons////////////////////////////////////////////////
@@ -586,7 +600,7 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
                         //cout<< "isProbeMedium: "<< isProbeMedium<<endl;
 
 			float eleProbeEta = eleProbe->p4().Eta();
-			if((abs(eleProbeEta)>1.4442 && abs(eleProbeEta)<1.566)) continue;
+	                if((abs(eleProbeEta)>1.4442 && abs(eleProbeEta)<1.566)) continue;
 
 			bool isOS = (eleTag->charge() / eleProbe->charge() < 0) ? true : false;
 			if(!isOS) continue;
@@ -698,7 +712,7 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
 			edm::Handle< BXVector<l1t::EGamma> >  L1EGHandle;
 			iEvent.getByToken(_L1EGTag, L1EGHandle);
 
-			float minDR = 0.3; //Uncomment for new match algo
+			float minDR = 0.5; //Uncomment for new match algo
                         
                         this -> _allL1tPt.clear();
                         this -> _allL1tEta.clear();
@@ -724,6 +738,8 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
 			for (l1t::EGammaBxCollection::const_iterator bx0EGIt = L1EGHandle->begin(0); bx0EGIt != L1EGHandle->end(0) ; bx0EGIt++)
 			{
 				const float dR = deltaR(*eleProbe, *bx0EGIt);
+                                _Unpacked_dR = dR;
+                                cout<<"dR for the Unpacked: "<<dR<<endl;
                               //  cout<<"dR: "<<dR<<endl;
 				const l1t::EGamma& l1tEG = *bx0EGIt;
 
@@ -754,15 +770,20 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
 
 			if (L1EmuEGHandle.isValid())
 			{
-				minDR = 0.3;
+				minDR = 0.5;
 
 				for (l1t::EGammaBxCollection::const_iterator bx0EmuEGIt = L1EmuEGHandle->begin(0); bx0EmuEGIt != L1EmuEGHandle->end(0) ; bx0EmuEGIt++)
 				{
 					const float dR = deltaR(*eleProbe, *bx0EmuEGIt);
+                                        _Emulated_dR = dR;
 					const l1t::EGamma& l1tEmuEG = *bx0EmuEGIt;
-
-					//cout<<"Emul EG, pT = "<<l1tEmuEG.pt()<<", eta = "<<l1tEmuEG.eta()<<", phi = "<<l1tEmuEG.phi()<<endl;
-
+                                        cout<<endl;
+                                        cout<<"dR for the Emulated: "<<dR<<endl;
+					cout<<"Emul EG, pT = "<<l1tEmuEG.pt()<<", eta = "<<l1tEmuEG.eta()<<", phi = "<<l1tEmuEG.phi()<<endl;
+                                        
+                                        //cout<<"dR for the Emulated: "<<dR<<endl;                                           
+                                       
+                                          
 					if (dR < minDR) //Uncomment for new match algo
 					{
 						minDR = dR; //Uncomment for new match algo
@@ -776,7 +797,8 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
 						this -> _l1tEmuTowerIPhi = l1tEmuEG.towerIPhi();
 						this -> _l1tEmuRawEt     = l1tEmuEG.rawEt();
 						this -> _l1tEmuIsoEt     = l1tEmuEG.isoEt();
-
+                                                
+                                                //this -> _seedTowerEt     = l1tEmuEG.seedTowerEt();   
 					}
 				}
                       
