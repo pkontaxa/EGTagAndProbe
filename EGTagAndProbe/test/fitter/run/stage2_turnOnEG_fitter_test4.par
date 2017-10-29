@@ -1,0 +1,70 @@
+OutputFile: results4/Run2017E/fitOutput.root
+NCPU: 8
+
+Turnon.N: 3
+
+NoFit: true
+
+Turnon.1.Name: Stage2_vs_Pt_40GeV
+Turnon.1.File: /eos/cms/store/user/pakontax/TagAndProbeTrees/emulator2/2017E_offline_IDs/SingleElectron/TagAndProbe_test/171022_200131/total/small.root
+
+Turnon.1.Tree: Ntuplizer/TagAndProbe
+Turnon.1.XVar: eleProbeSclEt
+Turnon.1.Cut: (hasL1Emu_0 && isProbeLoose) 
+
+Turnon.1.SelectionVars: eleProbeEta
+Turnon.1.Selection: abs(eleProbeEta) < 1.479 
+
+Turnon.1.Binning: 1., 3., 5., 7., 9.,  10., 12., 15., 18., 20., 22., 24., 26., 28., 30., 32., 34., 37., 38., 39., 40., 41., 42., 43., 45., 50., 60., 70., 100., 200., 300., 400., 600., 1000., 2000.
+
+Turnon.1.FitRange: 0 1000
+Turnon.1.CB.Max: 1. 0.6 1.
+Turnon.1.CB.Alpha: 17. 0.01 80.
+Turnon.1.CB.N: 2.1 1.001 1000.
+Turnon.1.CB.Mean: 40. 0. 100.
+Turnon.1.CB.Sigma: 2.9 0.01 100
+
+
+
+Turnon.2.Name: Stage2_vs_Pt_30GeV
+Turnon.2.File: /eos/cms/store/user/pakontax/TagAndProbeTrees/emulator2/2017E_offline_IDs/SingleElectron/TagAndProbe_test/171022_200131/total/small.root
+
+Turnon.2.Tree: Ntuplizer/TagAndProbe
+Turnon.2.XVar: eleProbeSclEt
+Turnon.2.Cut: (hasL1Emu_0 && isProbeMedium) 
+
+Turnon.2.SelectionVars: eleProbeEta
+Turnon.2.Selection: abs(eleProbeEta) < 1.479 
+
+Turnon.2.Binning: 1., 3., 5., 7., 9.,  10., 12., 15., 18., 20., 22., 24., 26., 28., 30., 32., 34., 37., 38., 39., 40., 41., 42., 43., 45., 50., 60., 70., 100., 200., 300., 400., 600., 1000., 2000.
+
+Turnon.2.FitRange: 0 1000
+Turnon.2.CB.Max: 1. 0.6 1.
+Turnon.2.CB.Alpha: 17. 0.01 80.
+Turnon.2.CB.N: 2.1 1.001 1000.
+Turnon.2.CB.Mean: 40. 0. 100.
+Turnon.2.CB.Sigma: 2.9 0.01 100
+
+
+
+Turnon.3.Name: Stage2_vs_Pt_20GeV
+Turnon.3.File: /eos/cms/store/user/pakontax/TagAndProbeTrees/emulator2/2017E_offline_IDs/SingleElectron/TagAndProbe_test/171022_200131/total/small.root
+
+Turnon.3.Tree: Ntuplizer/TagAndProbe
+Turnon.3.XVar: eleProbeSclEt
+Turnon.3.Cut: (hasL1Emu_0 && isProbeTight)
+
+Turnon.3.SelectionVars: eleProbeEta
+Turnon.3.Selection: abs(eleProbeEta) < 1.479 
+
+Turnon.3.Binning: 1., 3., 5., 7., 9.,  10., 12., 15., 18., 20., 22., 24., 26., 28., 30., 32., 34., 37., 38., 39., 40., 41., 42., 43., 45., 50., 60., 70., 100., 200., 300., 400., 600., 1000., 2000.
+
+Turnon.3.FitRange: 0 1000
+Turnon.3.CB.Max: 1. 0.6 1.
+Turnon.3.CB.Alpha: 17. 0.01 80.
+Turnon.3.CB.N: 2.1 1.001 1000.
+Turnon.3.CB.Mean: 40. 0. 100.
+Turnon.3.CB.Sigma: 2.9 0.01 100
+
+
+

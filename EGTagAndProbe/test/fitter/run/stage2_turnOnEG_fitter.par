@@ -1,0 +1,79 @@
+OutputFile: results/TestTurnOn/fitOutput.root
+NCPU: 4
+
+Turnon.N: 5
+
+
+Turnon.1.Name: Stage2_vs_Pt_35GeV
+Turnon.1.File: /data_CMS/cms/strebler/L1_eg/TandP_dev/CMSSW_9_1_0_pre3/src/EGTagAndProbe/EGTagAndProbe/test/Ntuples_dir/NTuple_test.root
+Turnon.1.Tree: Ntuplizer/TagAndProbe
+Turnon.1.XVar: eleProbeSclEt
+Turnon.1.Cut: (l1tPt>=35)
+Turnon.1.Binning: 10., 20., 25., 30., 32.5, 35., 37.5, 40., 42.5, 45., 50., 55., 60., 70., 100., 120., 200., 300., 400., 600., 1000., 2000.
+Turnon.1.FitRange: 10 100
+Turnon.1.CB.Max: 1. 0.6 1.
+Turnon.1.CB.Alpha: 2.69 0.01 8.
+Turnon.1.CB.N: 2.45 1.1 35.
+Turnon.1.CB.Mean: 35. 0. 120.
+Turnon.1.CB.Sigma: 1. 0.01 5
+
+
+
+Turnon.2.Name: Stage2_vs_Pt_35GeV_iso
+Turnon.2.File: /data_CMS/cms/strebler/L1_eg/TandP_dev/CMSSW_9_1_0_pre3/src/EGTagAndProbe/EGTagAndProbe/test/Ntuples_dir/NTuple_test.root
+Turnon.2.Tree: Ntuplizer/TagAndProbe
+Turnon.2.XVar: eleProbeSclEt
+Turnon.2.Cut: (l1tPt>=35 && l1tIso)
+Turnon.2.Binning: 10 25 30 32 34 36 38 40 45 50 60 70 100 150 200 500
+Turnon.2.FitRange:0 500
+Turnon.2.CB.Max: 1. 0.9 1.
+Turnon.2.CB.Alpha: 3. 0.01 50.
+Turnon.2.CB.N: 10. 1.001 100.
+Turnon.2.CB.Mean: 30. 0. 120.
+Turnon.2.CB.Sigma: 2. 0.01 10
+
+Turnon.3.Name: Stage2_Barrel_vs_Pt_35GeV
+Turnon.3.File: /data_CMS/cms/strebler/L1_eg/TandP_dev/CMSSW_9_1_0_pre3/src/EGTagAndProbe/EGTagAndProbe/test/Ntuples_dir/NTuple_test.root
+Turnon.3.Tree: Ntuplizer/TagAndProbe
+Turnon.3.XVar: eleProbeSclEt
+Turnon.3.Cut: (l1tPt>=35)
+Turnon.3.SelectionVars: eleProbeEta
+Turnon.3.Selection: abs(eleProbeEta)<1.4442
+Turnon.3.Binning: 10 25 30 32 34 36 38 40 45 50 60 70 100 150 200 500
+Turnon.3.FitRange:0 500
+Turnon.3.CB.Max: 1. 0.9 1.
+Turnon.3.CB.Alpha: 3. 0.01 50.
+Turnon.3.CB.N: 10. 1.001 100.
+Turnon.3.CB.Mean: 30. 0. 120.
+Turnon.3.CB.Sigma: 2. 0.01 10
+
+Turnon.4.Name: Stage2_Endcaps_vs_Pt_35GeV
+Turnon.4.File: /data_CMS/cms/strebler/L1_eg/TandP_dev/CMSSW_9_1_0_pre3/src/EGTagAndProbe/EGTagAndProbe/test/NTuple.root
+Turnon.4.Tree: Ntuplizer/TagAndProbe
+Turnon.4.XVar: eleProbeSclEt
+Turnon.4.Cut: (l1tPt>=35)
+Turnon.4.SelectionVars: eleProbeEta
+Turnon.4.Selection: abs(eleProbeEta)>1.566 && abs(eleProbeEta)<2.5
+Turnon.4.Binning: 10 25 30 32 34 36 38 40 45 50 60 70 100 150 200 500
+Turnon.4.FitRange:0 500
+Turnon.4.CB.Max: 1. 0.9 1.
+Turnon.4.CB.Alpha: 3. 0.01 50.
+Turnon.4.CB.N: 10. 1.001 100.
+Turnon.4.CB.Mean: 30. 0. 120.
+Turnon.4.CB.Sigma: 2. 0.01 10
+
+
+
+Turnon.5.Name: Stage2_L1
+Turnon.5.File: /data_CMS/cms/davignon/TauTagAndProbe_FromMyFork/CMSSW_8_0_21/src/TauTagAndProbe/TauTagAndProbe/test/fitter/run/../../Ntuples_141116/Option22/Ntuple_Option22_2016_forFit.root
+Turnon.5.Tree: TagAndProbe
+Turnon.5.XVar: tauPt
+Turnon.5.Cut: hasL1_30_iso
+Turnon.5.WeightVar: bkgSubW
+Turnon.5.Binning: 10., 20., 25., 30., 32.5, 35., 37.5, 40., 42.5, 45., 50., 55., 60., 70., 100., 120., 200., 300., 400., 600., 1000., 2000.
+Turnon.5.FitRange: 0 500
+Turnon.5.CB.Max: 1. 0.9 1.
+Turnon.5.CB.Alpha: 3. 0.01 50.
+Turnon.5.CB.N: 10. 1.001 100.
+Turnon.5.CB.Mean: 30. 0. 120.
+Turnon.5.CB.Sigma: 2. 0.01 10
