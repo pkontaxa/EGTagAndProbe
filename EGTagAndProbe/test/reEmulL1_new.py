@@ -100,7 +100,7 @@ import FWCore.Utilities.FileUtils as FileUtils
 
 if not isMC: # will use 80X
     from Configuration.AlCa.autoCond import autoCond
-    process.GlobalTag.globaltag = '92X_dataRun2_Prompt_v8' #'90X_dataRun2_v0'  #'92X_dataRun2_Prompt_v8'
+    process.GlobalTag.globaltag = '94X_dataRun2_v2' #'90X_dataRun2_v0'  #'92X_dataRun2_Prompt_v8'
 
 #Martin's addition (not necessary for me)
 
@@ -142,7 +142,7 @@ if not isMC: # will use 80X
 
 
 
-            #secondaryFileNames = cms.untracked.vstring('file:AA918EB1-6E64-E611-9BE0-00259074AE54.root')
+     #       secondaryFileNames = cms.untracked.vstring('file:AA918EB1-6E64-E611-9BE0-00259074AE54.root')
             #'/store/mc/RunIISpring16MiniAODv2/GluGluHToTauTau_M125_13TeV_powheg_pythia8/MINIAODSIM/FlatPU20to70HcalNZSRAW_withHLT_80X_mcRun2_asymptotic_v14-v1/50000/302E52FC-8567-E611-B2AA-0CC47A703326.root',
             #),
             #            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/6E300626-5E26-E611-980B-02163E0119A2.root',
@@ -222,7 +222,7 @@ else:
     from L1Trigger.Configuration.customiseUtils import L1TTurnOffUnpackStage2GtGmtAndCalo 
     process = L1TTurnOffUnpackStage2GtGmtAndCalo(process)
 
-process.load("L1Trigger.L1TCalorimeter.caloStage2Params_2017_v1_8_3_updateHFSF_v7MET_cfi")
+process.load("L1Trigger.L1TCalorimeter.caloStage2Params_2017_v1_10_mode_inconsistent_cfi")
 
 #### handling of cms line options for tier3 submission
 #### the following are dummy defaults, so that one can normally use the config changing file list by hand etc.
