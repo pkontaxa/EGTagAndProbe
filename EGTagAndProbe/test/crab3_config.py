@@ -5,7 +5,7 @@ config = Configuration()
 
 config.section_("General")
 config.General.requestName = 'TagAndProbe_test'
-config.General.workArea = 'DefaultCrab3Area_2017E_allCuts_enabled_callibration_try4'
+config.General.workArea = 'DefaultCrab3Area'
 
 config.section_("JobType")
 config.JobType.pluginName = 'Analysis'
@@ -19,7 +19,7 @@ config.Data.secondaryInputDataset= '/SingleElectron/Run2017E-v1/RAW'
 ##################################################################################################
 
 config.Data.inputDBS = 'global'
-config.Data.runRange = '303832' #'300742-301283'
+#config.Data.runRange =  '300742-301283'
 config.Data.splitting = 'EventAwareLumiBased'
 config.Data.unitsPerJob = 15000 #number of events per jobs
 config.Data.totalUnits = -1 #number of event
