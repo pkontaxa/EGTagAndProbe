@@ -8,7 +8,7 @@ Based on TauTagAndProbe package developed by L. Cadamuro & O. Davignon
 cmsrel CMSSW_9_1_0_pre3
 cd CMSSW_9_1_0_pre3/src
 cmsenv
-git clone https://github.com/tstreble/EGTagAndProbe
+git clone https://github.com/pkontaxa/EGTagAndProbe
 scram b -j4
 ```
 
