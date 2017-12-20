@@ -1,0 +1,116 @@
+OutputFile: results2017/Run2017/fitOutput_lowStats_superimposed.root
+NCPU: 8
+
+Turnon.N: 5
+
+NoFit: false
+
+Turnon.1.Name: Stage2_vs_Pt_40GeV
+Turnon.1.File: /eos/cms/store/user/pakontax/TagAndProbeTrees/CMSWeek_December/total/lowStats_B.root
+
+Turnon.1.Tree: Ntuplizer/TagAndProbe
+Turnon.1.XVar: eleProbeSclEt
+Turnon.1.Cut: ((hasL1_40) || (hasL1_tightiso_38))
+
+Turnon.1.SelectionVars: l1tEta
+Turnon.1.Selection: (abs(l1tEta) < 2.1 && isProbeLoose)
+
+Turnon.1.Binning: 1., 3., 5., 7., 9.,  10., 12., 15., 18., 20., 22., 24., 26., 28., 29., 30., 31., 32., 33., 34., 35., 36., 37., 38., 39., 40., 41., 42., 43., 45., 50., 60., 70., 100., 200., 300., 400., 600., 1000., 2000.
+
+Turnon.1.FitRange: 0 1000
+Turnon.1.CB.Max: 1. 0.6 1.
+Turnon.1.CB.Alpha: 17. 0.01 80.
+Turnon.1.CB.N: 1.75 1.001 1000.
+Turnon.1.CB.Mean: 38. 0. 100.
+Turnon.1.CB.Sigma: 2.2 0.01 100
+
+
+
+
+Turnon.2.Name: Stage2_vs_Pt_30GeV
+Turnon.2.File: /eos/cms/store/user/pakontax/TagAndProbeTrees/CMSWeek_December/total/lowStats_C.root
+
+
+Turnon.2.Tree: Ntuplizer/TagAndProbe
+Turnon.2.XVar: eleProbeSclEt
+Turnon.2.Cut: ((hasL1_40) || (hasL1_tightiso_38))
+
+Turnon.2.SelectionVars: l1tEta
+Turnon.2.Selection: (abs(l1tEta) < 2.1 && isProbeLoose)
+
+Turnon.2.Binning: 1., 3., 5., 7., 9.,  10., 12., 15., 18., 20., 22., 24., 26., 28., 29., 30., 31., 32., 33., 34., 35., 36., 37., 38., 39., 40., 41., 42., 43., 45., 50., 60., 70., 100., 200., 300., 400., 600., 1000., 2000.
+
+Turnon.2.FitRange: 0 1000
+Turnon.2.CB.Max: 1. 0.6 1.
+Turnon.2.CB.Alpha: 17. 0.01 80.
+Turnon.2.CB.N: 1.75 1.001 1000.
+Turnon.2.CB.Mean: 38. 0. 100.
+Turnon.2.CB.Sigma: 2.2 0.01 100
+
+
+
+Turnon.3.Name: Stage2_vs_Pt_20GeV
+Turnon.3.File: /eos/cms/store/user/pakontax/TagAndProbeTrees/CMSWeek_December/total/lowStats_D.root
+
+
+Turnon.3.Tree: Ntuplizer/TagAndProbe
+Turnon.3.XVar: eleProbeSclEt
+Turnon.3.Cut: ((hasL1_40) || (hasL1_tightiso_38))
+
+Turnon.3.SelectionVars: l1tEta
+Turnon.3.Selection: (abs(l1tEta) < 2.1 && isProbeLoose)
+
+Turnon.3.Binning: 1., 3., 5., 7., 9.,  10., 12., 15., 18., 20., 22., 24., 26., 28., 29., 30., 31., 32., 33., 34., 35., 36., 37., 38., 39., 40., 41., 42., 43., 45., 50., 60., 70., 100., 200., 300., 400., 600., 1000., 2000.
+
+Turnon.3.FitRange: 0 1000
+Turnon.3.CB.Max: 1. 0.6 1.
+Turnon.3.CB.Alpha: 17. 0.01 80.
+Turnon.3.CB.N: 1.75 1.001 1000.
+Turnon.3.CB.Mean: 38. 0. 100.
+Turnon.3.CB.Sigma: 2.2 0.01 100
+
+
+
+Turnon.4.Name: Stage2_vs_Pt_10GeV
+Turnon.4.File: /eos/cms/store/user/pakontax/TagAndProbeTrees/CMSWeek_December/total/lowStats_E.root
+
+
+Turnon.4.Tree: Ntuplizer/TagAndProbe
+Turnon.4.XVar: eleProbeSclEt
+Turnon.4.Cut: ((hasL1_40) || (hasL1_tightiso_38))
+
+Turnon.4.SelectionVars: l1tEta
+Turnon.4.Selection: (abs(l1tEta) < 2.1 && isProbeLoose)
+
+Turnon.4.Binning: 1., 3., 5., 7., 9.,  10., 12., 15., 18., 20., 22., 24., 26., 28., 29., 30., 31., 32., 33., 34., 35., 36., 37., 38., 39., 40., 41., 42., 43., 45., 50., 60., 70., 100., 200., 300., 400., 600., 1000., 2000.
+
+Turnon.4.FitRange: 0 1000
+Turnon.4.CB.Max: 1. 0.6 1.
+Turnon.4.CB.Alpha: 17. 0.01 80.
+Turnon.4.CB.N: 1.75 1.001 1000.
+Turnon.4.CB.Mean: 38. 0. 100.
+Turnon.4.CB.Sigma: 2.2 0.01 100
+
+
+
+Turnon.5.Name: Stage2_vs_Pt_0GeV
+Turnon.5.File: /eos/cms/store/user/pakontax/TagAndProbeTrees/CMSWeek_December/total/lowStats_F.root
+
+Turnon.5.Tree: Ntuplizer/TagAndProbe
+Turnon.5.XVar: eleProbeSclEt
+Turnon.5.Cut: ((hasL1_40) || (hasL1_tightiso_38))
+
+Turnon.5.SelectionVars: l1tEta
+Turnon.5.Selection: (abs(l1tEta) < 2.1 && isProbeLoose)
+
+Turnon.5.Binning: 1., 3., 5., 7., 9.,  10., 12., 15., 18., 20., 22., 24., 26., 28., 29., 30., 31., 32., 33., 34., 35., 36., 37., 38., 39., 40., 41., 42., 43., 45., 50., 60., 70., 100., 200., 300., 400., 600., 1000., 2000.
+
+Turnon.5.FitRange: 0 1000
+Turnon.5.CB.Max: 1. 0.6 1.
+Turnon.5.CB.Alpha: 17. 0.01 80.
+Turnon.5.CB.N: 1.75 1.001 1000.
+Turnon.5.CB.Mean: 38. 0. 100.
+Turnon.5.CB.Sigma: 2.2 0.01 100
+
+
+
