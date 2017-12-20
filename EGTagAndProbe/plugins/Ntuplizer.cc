@@ -97,7 +97,7 @@ class Ntuplizer : public edm::EDAnalyzer {
 		/////////////////////////////////////////////////////////////////
 
  
-                /////////////////////// Pantelis offline ID selections & DeltaR & SeedTowerEt & TowerHoE //////////
+                /////////////////////// Pantelis offline ID selections & DeltaR & SeedTowerEt & TowerHoE & iem & ihad //////////
                 int _isProbeLoose;
                 int _isProbeTight;
                 int _isProbeMedium;
@@ -108,6 +108,11 @@ class Ntuplizer : public edm::EDAnalyzer {
                 int _seedTowerEt;
                 
                 int _TowerHoE;     
+
+                int _iem;
+                int _ihad;
+
+                int _shape;
                 ////////////////////////////////////////////////////////////////
 
 		float _eleProbePt;
@@ -160,7 +165,7 @@ class Ntuplizer : public edm::EDAnalyzer {
                 int _hasL1_tightiso[100];
                 int _hasL1Emu_tightiso[100];
                 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+          
 		edm::EDGetTokenT<edm::View<reco::GsfElectron> >  _electronsTag;
 		edm::EDGetTokenT<edm::View<reco::GenParticle> > _genParticlesTag;
 		edm::EDGetTokenT<edm::ValueMap<bool> > _eleLooseIdMapTag;
@@ -347,8 +352,8 @@ void Ntuplizer::Initialize() {
 	this -> _l1tEmuQual = -1;
 	this -> _l1tEmuIso = -1;
 	this -> _l1tEmuNTT = -1;
-	this -> _l1tEmuTowerIEta = -1;
-	this -> _l1tEmuTowerIPhi = -1;
+	this -> _l1tEmuTowerIEta = 666;
+	this -> _l1tEmuTowerIPhi = 666;
 	this -> _l1tEmuRawEt = -1;
 	this -> _l1tEmuIsoEt = -1;
 	this -> _foundTag = 0;	
@@ -370,7 +375,12 @@ void Ntuplizer::Initialize() {
 
         this -> _seedTowerEt = -1;
       
-        this ->_TowerHoE = -1;
+        this ->_TowerHoE = -666;
+
+        this -> _iem = -1;
+        this -> _ihad = -1;
+
+        this -> _shape = -2; 
         ////////////////////////////// 
 
 
@@ -437,16 +447,21 @@ void Ntuplizer::beginJob()
 	this -> _tree -> Branch("l1tEmuIsoEt", &_l1tEmuIsoEt, "l1tEmuIsoEt/I");
         
         ////////////////////////////////// Pantelis offlineIDs Branches ///////////////////////////
-        this -> _tree -> Branch("isProbeLoose", &_isProbeLoose);
-        this -> _tree -> Branch("isProbeTight", &_isProbeTight);
-        this -> _tree -> Branch("isProbeMedium", &_isProbeMedium);
+        this -> _tree -> Branch("isProbeLoose", &_isProbeLoose, "isProbeLoose/I");
+        this -> _tree -> Branch("isProbeTight", &_isProbeTight, "isProbeTight/I");
+        this -> _tree -> Branch("isProbeMedium", &_isProbeMedium, "isProbeMedium/I");
 
-        this -> _tree -> Branch("UnpackedDR", &_Unpacked_dR);
-        this -> _tree -> Branch("EmulatedDR", &_Emulated_dR);
+        this -> _tree -> Branch("UnpackedDR", &_Unpacked_dR, "UnpackedDR/F");
+        this -> _tree -> Branch("EmulatedDR", &_Emulated_dR, "EmulatedDR/F");
 
-        this -> _tree -> Branch("seedTowerEt", &_seedTowerEt);
+        this -> _tree -> Branch("seedTowerEt", &_seedTowerEt, "seedTowerEt/I");
    
-        this -> _tree -> Branch("TowerHoE", &_TowerHoE);
+        this -> _tree -> Branch("TowerHoE", &_TowerHoE,"TowerHoE/I");
+
+        this -> _tree -> Branch("iem", &_iem,"iem/I");
+        this -> _tree -> Branch("ihad", &_ihad,"ihad/I");
+
+        this -> _tree -> Branch("shape", &_shape, "shape/I");
         ///////////////////////////////////////////////////////////////////////////////////////////  
          
 	///////////////////////////////All Electrons////////////////////////////////////////////////
@@ -533,7 +548,7 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
 	iEvent.getByToken(this -> _eleLooseIdMapTag, loose_id_decisions);
         /////////////////////////////// Pantelis TightIDs ////////////////////////////////////////////////////////////////////////////////
         iEvent.getByToken(this -> _eleTightIdMapTag, tight_id_decisions); 
-        //iEvent.getByToken(this -> _eleMediumIdMapTag, medium_id_decisions);
+        iEvent.getByToken(this -> _eleMediumIdMapTag, medium_id_decisions);
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	iEvent.getByToken(this -> _eleMediumIdMapTag, medium_id_decisions);
@@ -718,7 +733,7 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
 			edm::Handle< BXVector<l1t::EGamma> >  L1EGHandle;
 			iEvent.getByToken(_L1EGTag, L1EGHandle);
 
-			float minDR = 0.5; //Uncomment for new match algo
+			float minDR = 0.3; //Uncomment for new match algo
                         
                         this -> _allL1tPt.clear();
                         this -> _allL1tEta.clear();
@@ -745,11 +760,11 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
 			{
 				const float dR = deltaR(*eleProbe, *bx0EGIt);
                                 _Unpacked_dR = dR;
-                                cout<<"dR for the Unpacked: "<<dR<<endl;
+                              //  cout<<"dR for the Unpacked: "<<dR<<endl;
                               //  cout<<"dR: "<<dR<<endl;
 				const l1t::EGamma& l1tEG = *bx0EGIt;
 
-				cout<<"FW EG, pT = "<<l1tEG.pt()<<", eta = "<<l1tEG.eta()<<", phi = "<<l1tEG.phi()<<endl;
+				//cout<<"FW EG, pT = "<<l1tEG.pt()<<", eta = "<<l1tEG.eta()<<", phi = "<<l1tEG.phi()<<endl;
 
 				if (dR < minDR) //Uncomment for new match algo
 				{
@@ -776,16 +791,16 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
 
 			if (L1EmuEGHandle.isValid())
 			{
-				minDR = 0.5;
+				minDR = 0.3;
 
 				for (l1t::EGammaBxCollection::const_iterator bx0EmuEGIt = L1EmuEGHandle->begin(0); bx0EmuEGIt != L1EmuEGHandle->end(0) ; bx0EmuEGIt++)
 				{
 					const float dR = deltaR(*eleProbe, *bx0EmuEGIt);
                                         _Emulated_dR = dR;
 					const l1t::EGamma& l1tEmuEG = *bx0EmuEGIt;
-                                        cout<<endl;
-                                        cout<<"dR for the Emulated: "<<dR<<endl;
-					cout<<"Emul EG, pT = "<<l1tEmuEG.pt()<<", eta = "<<l1tEmuEG.eta()<<", phi = "<<l1tEmuEG.phi()<<endl;
+                         //               cout<<endl;
+                           //             cout<<"dR for the Emulated: "<<dR<<endl;
+			//		cout<<"Emul EG, pT = "<<l1tEmuEG.pt()<<", eta = "<<l1tEmuEG.eta()<<", phi = "<<l1tEmuEG.phi()<<endl;
                                         
                                         //cout<<"dR for the Emulated: "<<dR<<endl;                                           
                                        
@@ -807,6 +822,12 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
                                                 this -> _seedTowerEt     = l1tEmuEG.seedTowerEt(); 
  
                                                 this -> _TowerHoE        = l1tEmuEG.towerHoE();  
+   
+                                                this -> _iem             = l1tEmuEG.seedTowerEm();
+
+                                                //this -> _ihad            = l1tEmuEG.seedTowerHad();
+
+                                                this -> _shape           = l1tEmuEG.shape();
 					}
 				}
                       
