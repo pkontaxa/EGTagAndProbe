@@ -93,17 +93,17 @@ process.electrons = cms.Sequence(getattr(process,mvaMod)*getattr(process,egmMod)
 
 if not isMC: # will use 80X
     from Configuration.AlCa.autoCond import autoCond
-    process.GlobalTag.globaltag = '80X_dataRun2_Prompt_v8'
+    process.GlobalTag.globaltag = '92X_dataRun2_Prompt_v8'
     process.load('EGTagAndProbe.EGTagAndProbe.tagAndProbe_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(
-            '/store/data/Run2016H/SingleElectron/MINIAOD/PromptReco-v2/000/281/693/00000/047717DF-5B86-E611-B59B-02163E01457D.root'            
+          '/store/data/Run2017B/SingleElectron/MINIAOD/PromptReco-v1/000/297/057/00000/94987913-A256-E711-A484-02163E01A391.root'            
         ),
     )
 
 
 else:
-    process.GlobalTag.globaltag = '90X_mcRun2_asymptotic_v0'
+    process.GlobalTag.globaltag = '94X_mcRun2_asymptotic_v0'
     process.load('EGTagAndProbe.EGTagAndProbe.MCanalysis_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(            
