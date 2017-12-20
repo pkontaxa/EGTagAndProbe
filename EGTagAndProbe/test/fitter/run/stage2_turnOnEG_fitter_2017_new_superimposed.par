@@ -10,7 +10,7 @@ Turnon.1.File: /eos/cms/store/user/pakontax/TagAndProbeTrees/CMSWeek_December/to
 
 Turnon.1.Tree: Ntuplizer/TagAndProbe
 Turnon.1.XVar: eleProbeSclEt
-Turnon.1.Cut: ((hasL1_40) || (hasL1_tightiso_38))
+Turnon.1.Cut: hasL1_40
 
 Turnon.1.SelectionVars: l1tEta
 Turnon.1.Selection: (abs(l1tEta) < 2.1 && isProbeLoose)
@@ -33,7 +33,7 @@ Turnon.2.File: /eos/cms/store/user/pakontax/TagAndProbeTrees/CMSWeek_December/to
 
 Turnon.2.Tree: Ntuplizer/TagAndProbe
 Turnon.2.XVar: eleProbeSclEt
-Turnon.2.Cut: ((hasL1_40) || (hasL1_tightiso_38))
+Turnon.2.Cut: hasL1_40
 
 Turnon.2.SelectionVars: l1tEta
 Turnon.2.Selection: (abs(l1tEta) < 2.1 && isProbeLoose)
@@ -55,7 +55,7 @@ Turnon.3.File: /eos/cms/store/user/pakontax/TagAndProbeTrees/CMSWeek_December/to
 
 Turnon.3.Tree: Ntuplizer/TagAndProbe
 Turnon.3.XVar: eleProbeSclEt
-Turnon.3.Cut: ((hasL1_40) || (hasL1_tightiso_38))
+Turnon.3.Cut: hasL1_40 
 
 Turnon.3.SelectionVars: l1tEta
 Turnon.3.Selection: (abs(l1tEta) < 2.1 && isProbeLoose)
@@ -77,7 +77,7 @@ Turnon.4.File: /eos/cms/store/user/pakontax/TagAndProbeTrees/CMSWeek_December/to
 
 Turnon.4.Tree: Ntuplizer/TagAndProbe
 Turnon.4.XVar: eleProbeSclEt
-Turnon.4.Cut: ((hasL1_40) || (hasL1_tightiso_38))
+Turnon.4.Cut: hasL1_40
 
 Turnon.4.SelectionVars: l1tEta
 Turnon.4.Selection: (abs(l1tEta) < 2.1 && isProbeLoose)
@@ -98,7 +98,7 @@ Turnon.5.File: /eos/cms/store/user/pakontax/TagAndProbeTrees/CMSWeek_December/to
 
 Turnon.5.Tree: Ntuplizer/TagAndProbe
 Turnon.5.XVar: eleProbeSclEt
-Turnon.5.Cut: ((hasL1_40) || (hasL1_tightiso_38))
+Turnon.5.Cut: hasL1_40
 
 Turnon.5.SelectionVars: l1tEta
 Turnon.5.Selection: (abs(l1tEta) < 2.1 && isProbeLoose)
