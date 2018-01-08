@@ -5,8 +5,8 @@ Based on TauTagAndProbe package developed by L. Cadamuro & O. Davignon
 
 ### Install instructions
 ```
-cmsrel CMSSW_9_1_0_pre3
-cd CMSSW_9_1_0_pre3/src
+cmsrel CMSSW_9_4_0_pre3
+cd CMSSW_9_4_0_pre3/src
 cmsenv
 git clone https://github.com/pkontaxa/EGTagAndProbe
 scram b -j4
