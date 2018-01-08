@@ -25,7 +25,7 @@ Under development
 ### Submit job on the Grid
 Modify crab3_config.py: change requestName, inputDataSet, outLFNDirBase, outputDatasetTag, storageSite
 ```
-cd CMSSW_9_1_0_pre3/src/EGTagAndProbe/EGTagAndProbe/test
+cd CMSSW_9_4_0_pre3/src/EGTagAndProbe/EGTagAndProbe/test
 source /cvmfs/cms.cern.ch/crab3/crab.sh
 voms-proxy-init -voms cms
 crab submit -c crab3_config.py
@@ -34,7 +34,7 @@ crab submit -c crab3_config.py
 ### Producing turn-on plots
 Create configuration file base on test/fitter/run/stage2_turnOnEG_fitter_test.par
 ```
-cd CMSSW_9_1_0_pre3/src/EGTagAndProbe/EGTagAndProbe/test/fitter
+cd CMSSW_9_4_0_pre3/src/EGTagAndProbe/EGTagAndProbe/test/fitter
 make clean; make
 ./fit.exe run/stage2_turnOnEG_fitter_test.par
 ```
