@@ -18,11 +18,11 @@ dataset = {
     'SingleElectron_2017F': '/SingleElectron/Run2017F-17Nov2017-v1/MINIAOD',
 }
 eventsPerJob = {
-    'SingleElectron_2017B': 15000,
-    'SingleElectron_2017C': 15000,
-    'SingleElectron_2017D': 15000,
-    'SingleElectron_2017E': 15000,
-    'SingleElectron_2017F': 15000,
+    'SingleElectron_2017B': 1500,
+    'SingleElectron_2017C': 1500,
+    'SingleElectron_2017D': 1500,
+    'SingleElectron_2017E': 1500,
+    'SingleElectron_2017F': 1500,
     }
 listOfSamples = [
 #    'SingleElectron_2017B',
