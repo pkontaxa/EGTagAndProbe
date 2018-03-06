@@ -1,47 +1,57 @@
+#=====================================
+# User Imports
+#=====================================
 import FWCore.ParameterSet.VarParsing as VarParsing
 import FWCore.PythonUtilities.LumiList as LumiList
 import FWCore.ParameterSet.Config as cms
+
+#=====================================
+# Setup the process
+#=====================================
 process = cms.Process("TagAndProbe")
 
-isMC = True
-isMINIAOD = False
-
+#=====================================
+# Global Tag
+#=====================================
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 process.load("Configuration.StandardSequences.GeometryRecoDB_cff")
 
-#### handling of cms line options for tier3 submission
-#### the following are dummy defaults, so that one can normally use the config changing file list by hand etc.
+#=====================================
+# Options
+#=====================================
+isMC = False
+isMINIAOD = True
 
+# Handling of cms line options for tier3 submission
+# The following are dummy defaults, so that one can normally use the config changing file list by hand etc.
 options = VarParsing.VarParsing ('analysis')
 options.register ('skipEvents',
                   -1, # default value
-                  VarParsing.VarParsing.multiplicity.singleton, # singleton or list
-                  VarParsing.VarParsing.varType.int,          # string, int, or float
+                  VarParsing.VarParsing.multiplicity.singleton, # Options = [singleton, list]
+                  VarParsing.VarParsing.varType.int,            # Options = [string, int, float]
                   "Number of events to skip")
+
 options.register ('JSONfile',
                   "", # default value
-                  VarParsing.VarParsing.multiplicity.singleton, # singleton or list
-                  VarParsing.VarParsing.varType.string,          # string, int, or float
+                  VarParsing.VarParsing.multiplicity.singleton, # Options = [singleton, list]
+                  VarParsing.VarParsing.varType.string,         # Options = [string, int, float]
                   "JSON file (empty for no JSON)")
+
 options.outputFile = 'NTuple.root'
 options.inputFiles = []
 options.maxEvents  = -999
 options.parseArguments()
 
 
-
-
-# START ELECTRON CUT BASED ID SECTION
-#
+#======================================
+# Electron cut based ID section
+#======================================
 # Set up everything that is needed to compute electron IDs and
 # add the ValueMaps with ID decisions into the event data stream
-#
 
 # Load tools and function definitions
 from PhysicsTools.SelectorUtils.tools.vid_id_tools import *
-
 process.load("RecoEgamma.ElectronIdentification.ElectronMVAValueMapProducer_cfi")
-
 
 #**********************
 dataFormat = DataFormat.AOD
@@ -61,22 +71,20 @@ process.egmGsfElectronIDSequence = cms.Sequence(process.egmGsfElectronIDs)
 # Define which IDs we want to produce
 # Each of these two example IDs contains all four standard 
 my_id_modules =[
-'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Spring15_25ns_V1_cff',    # both 25 and 50 ns cutbased ids produced
-'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Spring15_50ns_V1_cff',
-'RecoEgamma.ElectronIdentification.Identification.heepElectronID_HEEPV60_cff',                 # recommended for both 50 and 25 ns
-'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_25ns_nonTrig_V1_cff', # will not be produced for 50 ns, triggering still to come
-'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_25ns_Trig_V1_cff',    # 25 ns trig
-'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_50ns_Trig_V1_cff',    # 50 ns trig
-'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring16_GeneralPurpose_V1_cff',   #Spring16
-'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring16_HZZ_V1_cff',   #Spring16 HZZ
-
+    'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Spring15_25ns_V1_cff',        # both 25 and 50 ns cutbased ids produced
+    'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Spring15_50ns_V1_cff',
+    'RecoEgamma.ElectronIdentification.Identification.heepElectronID_HEEPV60_cff',                     # recommended for both 50 and 25 ns
+    'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_25ns_nonTrig_V1_cff',     # will not be produced for 50 ns, triggering still to come
+    'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_25ns_Trig_V1_cff',        # 25 ns trig
+    'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_50ns_Trig_V1_cff',        # 50 ns trig
+    'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring16_GeneralPurpose_V1_cff',   # Spring16
+    'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring16_HZZ_V1_cff',              # Spring16 HZZ
 ] 
 
 
 #Add them to the VID producer
 for idmod in my_id_modules:
     setupAllVIDIdsInModule(process,idmod,setupVIDElectronSelection)
-
 
 egmMod = 'egmGsfElectronIDs'
 mvaMod = 'electronMVAValueMapProducer'
@@ -89,21 +97,19 @@ setattr(process,egmSeq,cms.Sequence(getattr(process,mvaMod)*getattr(process,egmM
 process.electrons = cms.Sequence(getattr(process,mvaMod)*getattr(process,egmMod)*getattr(process,regMod))
 
 
-
-
 if not isMC: # will use 80X
     from Configuration.AlCa.autoCond import autoCond
-    process.GlobalTag.globaltag = '92X_dataRun2_Prompt_v8'
+    process.GlobalTag.globaltag = '100X_dataRun2_v1'
     process.load('EGTagAndProbe.EGTagAndProbe.tagAndProbe_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(
-          '/store/data/Run2017B/SingleElectron/MINIAOD/PromptReco-v1/000/297/057/00000/94987913-A256-E711-A484-02163E01A391.root'            
+            '/store/data/Run2017F/SingleElectron/MINIAOD/17Nov2017-v1/50000/00CB40E7-E2E0-E711-861C-24BE05C6C682.root',
         ),
     )
 
 
 else:
-    process.GlobalTag.globaltag = '94X_mcRun2_asymptotic_v0'
+    process.GlobalTag.globaltag = '100X_mcRun2_asymptotic_v2'
     process.load('EGTagAndProbe.EGTagAndProbe.MCanalysis_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(            
@@ -116,11 +122,9 @@ else:
 
 
 if isMINIAOD:
-    process.Ntuplizer.electrons = cms.InputTag("slimmedElectrons")
+    process.Ntuplizer.electrons    = cms.InputTag("slimmedElectrons")
     process.Ntuplizer.genParticles = cms.InputTag("prunedGenParticles")
-    process.Ntuplizer.Vertices = cms.InputTag("offlineSlimmedPrimaryVertices")
-
-
+    process.Ntuplizer.Vertices     = cms.InputTag("offlineSlimmedPrimaryVertices")
 
 if options.JSONfile:
     print "Using JSON: " , options.JSONfile
