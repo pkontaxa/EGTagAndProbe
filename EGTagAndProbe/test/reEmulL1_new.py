@@ -1,8 +1,15 @@
+#=====================================
+# User Imports
+#=====================================
 import FWCore.ParameterSet.VarParsing as VarParsing
 import FWCore.PythonUtilities.LumiList as LumiList
 import FWCore.ParameterSet.Config as cms
 from Configuration.StandardSequences.Eras import eras
 
+
+#=====================================
+# Options
+#=====================================
 isMC = False
 isMINIAOD = True
 process = cms.Process("TagAndProbe",eras.Run2_2017)
@@ -21,14 +28,14 @@ options = VarParsing.VarParsing ('analysis')
 #options.register ('secondaryFilesList','',VarParsing.VarParsing.multiplicity.singleton,VarParsing.VarParsing.varType.string, "List of secondary input files")
 
 options.register ('skipEvents',
-        -1, # default value
-        VarParsing.VarParsing.multiplicity.singleton, # singleton or list
-        VarParsing.VarParsing.varType.int,          # string, int, or float
+        -1,                                            # Defaul  = -1
+        VarParsing.VarParsing.multiplicity.singleton,  # Options = [singleton, list]
+        VarParsing.VarParsing.varType.int,             # Options = [string, int, float]
         "Number of events to skip")
 options.register ('JSONfile',
-        "", # default value
-        VarParsing.VarParsing.multiplicity.singleton, # singleton or list
-        VarParsing.VarParsing.varType.string,          # string, int, or float
+        "",                                            # Default = -1
+        VarParsing.VarParsing.multiplicity.singleton,  # Options = [singleton, list]
+        VarParsing.VarParsing.varType.string,          # Options = [string, int, float]
         "JSON file (empty for no JSON)")
 options.outputFile = 'NTuple.root'
 options.inputFiles = []
@@ -36,11 +43,12 @@ options.maxEvents  = -999
 
 options.parseArguments()
 
+
+#========================================
 # START ELECTRON CUT BASED ID SECTION
-#
+#========================================
 # Set up everything that is needed to compute electron IDs and
 # add the ValueMaps with ID decisions into the event data stream
-#
 
 # Load tools and function definitions
 from PhysicsTools.SelectorUtils.tools.vid_id_tools import *
@@ -100,7 +108,7 @@ import FWCore.Utilities.FileUtils as FileUtils
 
 if not isMC: # will use 80X
     from Configuration.AlCa.autoCond import autoCond
-    process.GlobalTag.globaltag = '94X_dataRun2_v2' #'90X_dataRun2_v0'  #'92X_dataRun2_Prompt_v8'
+    process.GlobalTag.globaltag = '100X_dataRun2_v1'  #'94X_dataRun2_v2' #'90X_dataRun2_v0'  #'92X_dataRun2_Prompt_v8'
 
 #Martin's addition (not necessary for me)
 
@@ -114,99 +122,51 @@ if not isMC: # will use 80X
 
     process.load('EGTagAndProbe.EGTagAndProbe.tagAndProbe_cff')
     process.source = cms.Source("PoolSource",
-            fileNames = cms.untracked.vstring(
-                 '/store/data/Run2017C/SingleElectron/MINIAOD/PromptReco-v3/000/300/777/00000/C499093F-BA7E-E711-9F4D-02163E013897.root'
-                #'/store/data/Run2017B/SingleElectron/MINIAOD/PromptReco-v1/000/297/050/00000/166F7BB0-3C56-E711-BD8B-02163E0145C5.root'
-                #'/store/data/Run2017B/SingleElectron/MINIAOD/PromptReco-v1/000/297/057/00000/94987913-A256-E711-A484-02163E01A391.root' 
-                ),
-
-            #secondaryFileNames = cms.untracked.vstring(listSecondaryFiles)
-
-#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/06506BFA-FB7C-E711-B01B-02163E01A2A1.root',
-#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/0CEB47FF-FB7C-E711-9BB5-02163E011E6F.root',
-#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/24153D18-FC7C-E711-913C-02163E01A708.root',
-#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/724E931C-FC7C-E711-8A9C-02163E012118.root',
-#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/7AE81D09-FC7C-E711-B76A-02163E019B73.root',
-#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/A42EC9FC-FB7C-E711-8935-02163E0133E0.root',
-#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/B48FEC08-FC7C-E711-8344-02163E011C48.root',
-#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/C67421FB-FB7C-E711-A22D-02163E019BC5.root',
-#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/CA10D321-FC7C-E711-BB02-02163E0125F5.root',
-#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/CA125336-FC7C-E711-ADFA-02163E013820.root',
-#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/CC031C16-FC7C-E711-8E27-02163E0144EC.root',
-#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/CE296BF9-FB7C-E711-88A1-02163E01341D.root',
-#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/CE3E5B03-FC7C-E711-9171-02163E01A469.root',
-#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/CE8E0824-FC7C-E711-8F04-02163E014330.root',
-#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/D631951E-0B7D-E711-83D3-02163E0143E5.root',
-#'/store/data/Run2017C/SingleElectron/RAW/v1/000/300/777/00000/DE7D7A17-FC7C-E711-A5D0-02163E01A6F3.root'
-#)
-
-
-
-     #       secondaryFileNames = cms.untracked.vstring('file:AA918EB1-6E64-E611-9BE0-00259074AE54.root')
-            #'/store/mc/RunIISpring16MiniAODv2/GluGluHToTauTau_M125_13TeV_powheg_pythia8/MINIAODSIM/FlatPU20to70HcalNZSRAW_withHLT_80X_mcRun2_asymptotic_v14-v1/50000/302E52FC-8567-E611-B2AA-0CC47A703326.root',
-            #),
-            #            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/6E300626-5E26-E611-980B-02163E0119A2.root',
-            #            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/08F68A47-5D26-E611-B042-02163E012239.root',
-            #            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/1011D344-5E26-E611-ABC4-02163E011CF0.root',
-            #            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/1E3EFD43-5E26-E611-AE17-02163E0146FF.root',
-            #            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/2EA6473B-5E26-E611-B82A-02163E011EAC.root',
-            #            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/3CD7BB24-5D26-E611-88A3-02163E014736.root',
-            #            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/3CE74444-5E26-E611-8CE6-02163E012545.root',
-            #            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/488D1A44-5E26-E611-8057-02163E014285.root',
-            #            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/5EECA846-5D26-E611-A99C-02163E01432B.root',
-            #            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/7C7FB848-5E26-E611-8A06-02163E014167.root',
-            #            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/86E8DC25-5D26-E611-9827-02163E014713.root',
-            #            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/A4B22F44-5E26-E611-AFDA-02163E0141F3.root',
-            #            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/BA326B3B-5E26-E611-A6E0-02163E0124FA.root',
-            #            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/BADC0417-5D26-E611-872F-02163E012A7E.root',
-            #            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/C813CA24-5E26-E611-B7A2-02163E011F93.root',
-            #            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/E251C323-5E26-E611-825D-02163E011A0F.root',
-            #            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/E8FD1844-5E26-E611-B99E-02163E0146CB.root',
-            #            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/F8B44816-5E26-E611-A87A-02163E011E74.root',
-            #        ) 
-            )
-
+                                fileNames = cms.untracked.vstring(
+            '/store/data/Run2017F/SingleElectron/MINIAOD/17Nov2017-v1/50000/0014F790-FDE0-E711-A3E0-FA163E1B87FE.root',
+            ),
+                                secondaryFileNames = cms.untracked.vstring(
+            '/store/data/Run2017F/SingleElectron/RAW/v1/000/306/454/00000/A013486D-5BC5-E711-9D85-02163E01A2D4.root',
+            '/store/data/Run2017F/SingleElectron/RAW/v1/000/306/125/00000/6E0E1CEB-16C2-E711-B6D0-02163E01A463.root',
+            '/store/data/Run2017F/SingleElectron/RAW/v1/000/305/862/00000/909C68D2-7DBD-E711-9CC4-02163E011C76.root',
+            '/store/data/Run2017F/SingleElectron/RAW/v1/000/305/862/00000/8C61620D-7EBD-E711-8632-02163E01A760.root',
+            '/store/data/Run2017F/SingleElectron/RAW/v1/000/305/814/00000/FA30763E-E9BB-E711-9690-02163E0138BE.root',
+            '/store/data/Run2017F/SingleElectron/RAW/v1/000/305/814/00000/EECE8647-EDBB-E711-BEC4-02163E011FBF.root',
+            '/store/data/Run2017F/SingleElectron/RAW/v1/000/305/814/00000/ACA0D835-E1BB-E711-9B65-02163E01467B.root',
+            '/store/data/Run2017F/SingleElectron/RAW/v1/000/305/814/00000/A64F648A-FDBB-E711-9135-02163E013765.root',
+            '/store/data/Run2017F/SingleElectron/RAW/v1/000/305/814/00000/9C8BD8F8-01BC-E711-B285-02163E011884.root',
+            '/store/data/Run2017F/SingleElectron/RAW/v1/000/305/814/00000/6C599230-E1BB-E711-90AB-02163E019BE1.root',
+            '/store/data/Run2017F/SingleElectron/RAW/v1/000/305/814/00000/486CB205-02BC-E711-BD97-02163E019BB5.root',
+            '/store/data/Run2017F/SingleElectron/RAW/v1/000/305/814/00000/369E27C9-E0BB-E711-8E35-02163E01442D.root',
+            '/store/data/Run2017F/SingleElectron/RAW/v1/000/305/814/00000/182B4730-E1BB-E711-93C0-02163E014251.root',
+            '/store/data/Run2017F/SingleElectron/RAW/v1/000/305/766/00000/969EAA15-DABA-E711-A3FB-02163E013399.root',
+            '/store/data/Run2017F/SingleElectron/RAW/v1/000/305/636/00001/981452C1-0FBA-E711-9BC5-02163E019B3B.root',
+            '/store/data/Run2017F/SingleElectron/RAW/v1/000/305/636/00001/64754484-0FBA-E711-8C69-02163E019BC0.root',
+            '/store/data/Run2017F/SingleElectron/RAW/v1/000/305/636/00001/42C31672-0FBA-E711-8F1C-02163E013473.root',
+            '/store/data/Run2017F/SingleElectron/RAW/v1/000/305/636/00001/2E83F474-0FBA-E711-96E4-02163E019E02.root',
+            '/store/data/Run2017F/SingleElectron/RAW/v1/000/305/636/00001/1036B781-0FBA-E711-AE0A-02163E01A70A.root',
+            '/store/data/Run2017F/SingleElectron/RAW/v1/000/305/636/00001/0881ED67-0FBA-E711-91C6-02163E014737.root',
+            '/store/data/Run2017F/SingleElectron/RAW/v1/000/305/636/00000/625FF10E-0EBA-E711-96C8-02163E019C94.root',
+            ),
+                                )
     #process.source.eventsToProcess = cms.untracked.VEventRange('281613:108:12854629')
     #process.source.eventsToProcess = cms.untracked.VEventRange('274199:353:670607108')
 
-
-
 ########################################## Addition for Ntuples ###################################### 
-
 if isMINIAOD:
        process.Ntuplizer.electrons = cms.InputTag("slimmedElectrons")
        process.Ntuplizer.genParticles = cms.InputTag("prunedGenParticles")
-       process.Ntuplizer.Vertices = cms.InputTag("offlineSlimmedPrimaryVertices")
-      
+       process.Ntuplizer.Vertices = cms.InputTag("offlineSlimmedPrimaryVertices")      
       # process.Ntuplizer.triggerSet = cms.InputTag("slimmedPatTrigger","","RECO")
-
 ######################################################################################################
 
-
-
 else:
-    #process.GlobalTag.globaltag = 'auto:run2_mc' #MC 25 ns miniAODv2
-    process.GlobalTag.globaltag = '80X_mcRun2_asymptotic_v14'
-    #process.GlobalTag.globaltag = '80X_mcRun2_asymptotic_2016_miniAODv2' #MC 25 ns miniAODv2
-    # process.GlobalTag.globaltag = '76X_dataRun2_16Dec2015_v0'
+    process.GlobalTag.globaltag = '100X_mcRun2_asymptotic_v2'
     process.load('EGTagAndProbe.EGTagAndProbe.MCanalysis_cff')
     process.source = cms.Source("PoolSource",
             fileNames = cms.untracked.vstring(
-                #'/store/mc/RunIISpring16DR80/GluGluHToTauTau_M125_13TeV_powheg_pythia8/GEN-SIM-RAW/FlatPU20to70HcalNZSRAW_withHLT_80X_mcRun2_asymptotic_v14-v1/40000/AA918EB1-6E64-E611-9BE0-00259074AE54.root'
                 '/store/mc/RunIISpring16MiniAODv2/GluGluHToTauTau_M125_13TeV_powheg_pythia8/MINIAODSIM/FlatPU20to70HcalNZSRAW_withHLT_80X_mcRun2_asymptotic_v14-v1/50000/1A13CB76-9B67-E611-A143-0050560210EC.root'
                 ),
-            #secondaryFileNames = cms.untracked.vstring(listSecondaryFiles)
-            #'/store/mc/RunIISummer15GS/GluGluHToTauTau_M125_13TeV_powheg_pythia8/GEN-SIM/MCRUN2_71_V1-v1/00000/08D2C535-5458-E511-B0C0-FA163E83549A.root'
-            #'/store/mc/RunIISummer15GS/GluGluHToTauTau_M125_13TeV_powheg_pythia8/GEN-SIM/MCRUN2_71_V1-v1/10000/8A2D3925-4658-E511-80B2-02163E014126.root',
-            #'/store/mc/RunIISummer15GS/GluGluHToTauTau_M125_13TeV_powheg_pythia8/GEN-SIM/MCRUN2_71_V1-v1/10000/ECB7FC03-8058-E511-BE9D-02163E0141A2.root',
-            #'/store/mc/RunIISummer15GS/GluGluHToTauTau_M125_13TeV_powheg_pythia8/GEN-SIM/MCRUN2_71_V1-v1/60000/4473DFF5-9456-E511-9C4B-002590494C8A.root',
-            #'/store/mc/RunIISummer15GS/GluGluHToTauTau_M125_13TeV_powheg_pythia8/GEN-SIM/MCRUN2_71_V1-v1/60000/587A9A92-A956-E511-AC52-0025904B11CC.root',
-            #'/store/mc/RunIISummer15GS/GluGluHToTauTau_M125_13TeV_powheg_pythia8/GEN-SIM/MCRUN2_71_V1-v1/60000/7076052C-4A57-E511-B371-00259074AE9A.root',
-            #'/store/mc/RunIISummer15GS/GluGluHToTauTau_M125_13TeV_powheg_pythia8/GEN-SIM/MCRUN2_71_V1-v1/60000/7CD6A6C7-9C56-E511-87E5-003048C75840.root',
-            #'/store/mc/RunIISummer15GS/GluGluHToTauTau_M125_13TeV_powheg_pythia8/GEN-SIM/MCRUN2_71_V1-v1/60000/7E281C8E-4357-E511-8498-00259074AE80.root',
-            #'/store/mc/RunIISummer15GS/GluGluHToTauTau_M125_13TeV_powheg_pythia8/GEN-SIM/MCRUN2_71_V1-v1/60000/98884797-4957-E511-82C6-00259073E504.root',
-            #'/store/mc/RunIISummer15GS/GluGluHToTauTau_M125_13TeV_powheg_pythia8/GEN-SIM/MCRUN2_71_V1-v1/60000/BE274E99-4957-E511-88ED-0025907A1A2E.root',
-
             )
 
 process.schedule = cms.Schedule()
@@ -270,12 +230,6 @@ print("after process.L1TReEmul")
 process.p = cms.Path(process.NtupleSeq)
 print("after process.NtupleSeq")
 '''
-
-
-
-
-
- 
 
 
 process.schedule = cms.Schedule(process.p) # do my sequence pls
