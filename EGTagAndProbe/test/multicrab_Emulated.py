@@ -7,30 +7,32 @@ https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookCRAB3Tutorial#Setup_the_e
 #================================================================================================
 #  Definitions
 #================================================================================================
-name    = 'L1EG_Emulated'
+name    = 'L1EG_Emulated_EGamma2018'
 dirName = 'multicrab_'+name
 
 dataset = {
-    'SingleElectron_2017B': '/SingleElectron/Run2017B-17Nov2017-v1/MINIAOD',
-    'SingleElectron_2017C': '/SingleElectron/Run2017C-17Nov2017-v1/MINIAOD',
-    'SingleElectron_2017D': '/SingleElectron/Run2017D-17Nov2017-v1/MINIAOD',
-    'SingleElectron_2017E': '/SingleElectron/Run2017E-17Nov2017-v1/MINIAOD',
-    'SingleElectron_2017F': '/SingleElectron/Run2017F-17Nov2017-v1/MINIAOD',
+    'EGamma_2018A_v1' : '/EGamma/Run2018A-PromptReco-v1/MINIAOD',
+    'EGamma_2018A_v2' : '/EGamma/Run2018A-PromptReco-v2/MINIAOD',
+    'EGamma_2018A_v3' : '/EGamma/Run2018A-PromptReco-v3/MINIAOD',
+    'EGamma_2018B_v1' : '/EGamma/Run2018B-PromptReco-v1/MINIAOD',
+    'EGamma_2018B_v2' : '/EGamma/Run2018B-PromptReco-v2/MINIAOD',
 }
+
 eventsPerJob = {
-    'SingleElectron_2017B': 1500,
-    'SingleElectron_2017C': 1500,
-    'SingleElectron_2017D': 1500,
-    'SingleElectron_2017E': 1500,
-    'SingleElectron_2017F': 1500,
+    'EGamma_2018A_v1' : 30000,
+    'EGamma_2018A_v2' : 30000,
+    'EGamma_2018A_v3' : 900,
+    'EGamma_2018B_v1' : 900,
+    'EGamma_2018B_v2' : 900,
     }
+
 listOfSamples = [
-#    'SingleElectron_2017B',
-#    'SingleElectron_2017C',
-#    'SingleElectron_2017D',
-    'SingleElectron_2017E',
-    'SingleElectron_2017F',
-   ]
+    'EGamma_2018A_v1',
+    'EGamma_2018A_v2',
+    'EGamma_2018A_v3',
+    'EGamma_2018B_v1',
+    'EGamma_2018B_v2',
+    ]
 
 
 if __name__ == '__main__':
@@ -68,12 +70,12 @@ if __name__ == '__main__':
     #================================================================================================
     config.section_("Data")
     config.Data.inputDBS      = 'global'
-    config.Data.outLFNDirBase = '/store/user/%s/CRAB3_TransferData/L1EG_Emulated' % (getUsernameFromSiteDB())
+    config.Data.outLFNDirBase = '/store/user/mkolosov/CRAB3_TransferData/L1EG/Calibrations/'
     config.Data.splitting     = 'EventAwareLumiBased'
     config.Data.publication   = False
     config.Data.totalUnits    = -1    
-    config.Data.lumiMask      = 'Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt'
-    # Lumi Mask taken from:  '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/ReReco/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt'
+    config.Data.lumiMask      = 'Cert_314472-317696_13TeV_PromptReco_Collisions18_JSON.txt'
+    # Lumi Mask taken from:  'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions18/13TeV/PromptReco/Cert_314472-317696_13TeV_PromptReco_Collisions18_JSON.txt'
     
     #================================================================================================
     # Site Section: Contains the Grid site parameters (incl. stage out information)
@@ -86,7 +88,7 @@ if __name__ == '__main__':
     for sample in listOfSamples:
       config.General.requestName   = sample
       config.Data.inputDataset     = dataset[sample]
-      config.Data.useParent       = True   # Needed for L1 Emulator (or grandparent?)
+      config.Data.useParent        = True   # Needed for L1 Emulator (or grandparent?)
       config.Data.unitsPerJob      = eventsPerJob[sample]
       config.Data.outputDatasetTag = sample
       p = Process(target=submit, args=(config,))
