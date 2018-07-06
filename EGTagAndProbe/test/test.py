@@ -4,11 +4,13 @@
 import FWCore.ParameterSet.VarParsing as VarParsing
 import FWCore.PythonUtilities.LumiList as LumiList
 import FWCore.ParameterSet.Config as cms
+from Configuration.StandardSequences.Eras import eras
 
 #=====================================
 # Setup the process
 #=====================================
-process = cms.Process("TagAndProbe")
+# Marina
+process = cms.Process("TagAndProbe", eras.Run2_2018)
 
 #=====================================
 # Global Tag
@@ -71,12 +73,12 @@ process.egmGsfElectronIDSequence = cms.Sequence(process.egmGsfElectronIDs)
 # Define which IDs we want to produce
 # Each of these two example IDs contains all four standard 
 my_id_modules =[
-    'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Spring15_25ns_V1_cff',        # both 25 and 50 ns cutbased ids produced
-    'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Spring15_50ns_V1_cff',
+#    'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Spring15_25ns_V1_cff',        # both 25 and 50 ns cutbased ids produced
+#    'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Spring15_50ns_V1_cff',
     'RecoEgamma.ElectronIdentification.Identification.heepElectronID_HEEPV60_cff',                     # recommended for both 50 and 25 ns
-    'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_25ns_nonTrig_V1_cff',     # will not be produced for 50 ns, triggering still to come
-    'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_25ns_Trig_V1_cff',        # 25 ns trig
-    'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_50ns_Trig_V1_cff',        # 50 ns trig
+#    'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_25ns_nonTrig_V1_cff',     # will not be produced for 50 ns, triggering still to come
+#    'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_25ns_Trig_V1_cff',        # 25 ns trig
+#    'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_50ns_Trig_V1_cff',        # 50 ns trig
     'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring16_GeneralPurpose_V1_cff',   # Spring16
     'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring16_HZZ_V1_cff',              # Spring16 HZZ
 ] 
@@ -99,27 +101,22 @@ process.electrons = cms.Sequence(getattr(process,mvaMod)*getattr(process,egmMod)
 
 if not isMC: # will use 80X
     from Configuration.AlCa.autoCond import autoCond
-    process.GlobalTag.globaltag = '100X_dataRun2_v1'
+    process.GlobalTag.globaltag = '101X_dataRun2_Prompt_v9' 
     process.load('EGTagAndProbe.EGTagAndProbe.tagAndProbe_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(
-            '/store/data/Run2017F/SingleElectron/MINIAOD/17Nov2017-v1/50000/00CB40E7-E2E0-E711-861C-24BE05C6C682.root',
+            '/store/data/Run2018A/EGamma/MINIAOD/PromptReco-v1/000/315/259/00000/6864E4D1-654B-E811-BD3E-FA163ECB5162.root',
         ),
     )
-
-
 else:
-    process.GlobalTag.globaltag = '100X_mcRun2_asymptotic_v2'
+    process.GlobalTag.globaltag = '101X_mcRun2_asymptotic_v5'
     process.load('EGTagAndProbe.EGTagAndProbe.MCanalysis_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(            
-            #'/store/mc/RunIISummer16MiniAODv2/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v2/120000/02A210D6-F5C3-E611-B570-008CFA197BD4.root'      
             '/store/mc/RunIISummer16DR80/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RAWAODSIM/FlatPU28to62HcalNZSRAWAODSIM_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v2/110000/005BFB99-EBA9-E611-8850-0CC47A4D762A.root'
         )
     )
     process.Ntuplizer.useHLTMatch = cms.bool(False) #In case no HLT object in MC sample considered or you're fed up with trying to find the right HLT collections
-
-
 
 if isMINIAOD:
     process.Ntuplizer.electrons    = cms.InputTag("slimmedElectrons")
@@ -145,8 +142,6 @@ if options.skipEvents >= 0:
 process.options = cms.untracked.PSet(
     wantSummary = cms.untracked.bool(True)
 )
-
-
 
 process.p = cms.Path(
     process.electrons +

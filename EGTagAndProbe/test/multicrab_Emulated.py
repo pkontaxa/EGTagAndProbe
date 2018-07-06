@@ -21,9 +21,9 @@ dataset = {
 eventsPerJob = {
     'EGamma_2018A_v1' : 30000,
     'EGamma_2018A_v2' : 30000,
-    'EGamma_2018A_v3' : 900,
-    'EGamma_2018B_v1' : 900,
-    'EGamma_2018B_v2' : 900,
+    'EGamma_2018A_v3' : 30000,
+    'EGamma_2018B_v1' : 30000,
+    'EGamma_2018B_v2' : 30000,
     }
 
 listOfSamples = [
