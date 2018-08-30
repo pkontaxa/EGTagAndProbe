@@ -83,7 +83,7 @@ my_id_modules =[
 #'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_50ns_Trig_V1_cff',    # 50 ns trig
 'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring16_GeneralPurpose_V1_cff',   #Spring16
 'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring16_HZZ_V1_cff',   #Spring16 HZZ
-
+'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Fall17_iso_V1_cff',     # Fall17
 ]
 
 
@@ -110,7 +110,7 @@ import FWCore.Utilities.FileUtils as FileUtils
 # Marina
 if not isMC: # will use 80X
     from Configuration.AlCa.autoCond import autoCond
-    process.GlobalTag.globaltag = '101X_dataRun2_Prompt_v9' 
+    process.GlobalTag.globaltag = '102X_dataRun2_Prompt_v4'
 
 #Martin's addition (not necessary for me)
 
@@ -148,7 +148,7 @@ if isMINIAOD:
 ######################################################################################################
 
 else:
-    process.GlobalTag.globaltag = '101X_mcRun2_asymptotic_v5'
+    process.GlobalTag.globaltag = '102X_mcRun2_asymptotic_v3'
     process.load('EGTagAndProbe.EGTagAndProbe.MCanalysis_cff')
     process.source = cms.Source("PoolSource",
             fileNames = cms.untracked.vstring(
