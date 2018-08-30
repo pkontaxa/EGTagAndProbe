@@ -7,8 +7,8 @@ https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookCRAB3Tutorial#Setup_the_e
 #================================================================================================
 #  Definitions
 #================================================================================================
-name    = 'L1EG_Unpacked'
-dirName = 'multicrab_Unpacked_Performance'
+name    = 'L1EG_Unpacked_30August2018'
+dirName = 'multicrab_'+name
 
 dataset = {
     'EGamma_2018A_v1' : '/EGamma/Run2018A-PromptReco-v1/MINIAOD',
@@ -16,6 +16,11 @@ dataset = {
     'EGamma_2018A_v3' : '/EGamma/Run2018A-PromptReco-v3/MINIAOD',
     'EGamma_2018B_v1' : '/EGamma/Run2018B-PromptReco-v1/MINIAOD',
     'EGamma_2018B_v2' : '/EGamma/Run2018B-PromptReco-v2/MINIAOD',
+    'EGamma_2018C_v1' : '/EGamma/Run2018C-PromptReco-v1/MINIAOD',
+    'EGamma_2018C_v2' : '/EGamma/Run2018C-PromptReco-v2/MINIAOD',
+    'EGamma_2018C_v3' : '/EGamma/Run2018C-PromptReco-v3/MINIAOD',
+    'EGamma_2018D_v1' : '/EGamma/Run2018D-PromptReco-v1/MINIAOD',
+    'EGamma_2018D_v2' : '/EGamma/Run2018D-PromptReco-v2/MINIAOD',
     }
 
 eventsPerJob = {
@@ -24,6 +29,11 @@ eventsPerJob = {
     'EGamma_2018A_v3' : 30000,
     'EGamma_2018B_v1' : 30000,
     'EGamma_2018B_v2' : 30000,
+    'EGamma_2018C_v1' : 30000,
+    'EGamma_2018C_v2' : 30000,
+    'EGamma_2018C_v3' : 30000,
+    'EGamma_2018D_v1' : 30000,
+    'EGamma_2018D_v2' : 30000,
     }
 
 listOfSamples = [
@@ -32,8 +42,12 @@ listOfSamples = [
     'EGamma_2018A_v3',
     'EGamma_2018B_v1',
     'EGamma_2018B_v2',
+    'EGamma_2018C_v1',
+    'EGamma_2018C_v2',
+    'EGamma_2018C_v3',
+    'EGamma_2018D_v1',
+    'EGamma_2018D_v2',
     ]
-
 
 if __name__ == '__main__':
     
@@ -70,12 +84,12 @@ if __name__ == '__main__':
     #================================================================================================
     config.section_("Data")
     config.Data.inputDBS      = 'global'
-    config.Data.outLFNDirBase = '/store/user/mkolosov/CRAB3_TransferData/L1EG/Performance/'
+    config.Data.outLFNDirBase = '/store/user/mkolosov/CRAB3_TransferData/L1EG/Performance/Aug30/Unpacked/'
     config.Data.splitting     = 'EventAwareLumiBased'
     config.Data.publication   = False
     config.Data.totalUnits    = -1    
-    config.Data.lumiMask      = 'Cert_314472-317696_13TeV_PromptReco_Collisions18_JSON.txt'
-    # Lumi Mask taken from:  'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions18/13TeV/PromptReco/Cert_314472-317696_13TeV_PromptReco_Collisions18_JSON.txt'
+    config.Data.lumiMask      = 'Cert_314472-321221_13TeV_PromptReco_Collisions18_JSON.txt'
+    # Lumi Mask taken from:  'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions18/13TeV/PromptReco/Cert_314472-321221_13TeV_PromptReco_Collisions18_JSON.txt'
     
     #================================================================================================
     # Site Section: Contains the Grid site parameters (incl. stage out information)
