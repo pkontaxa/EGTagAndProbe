@@ -102,7 +102,7 @@ process.electrons = cms.Sequence(getattr(process,mvaMod)*getattr(process,egmMod)
 # Marina
 if not isMC: # will use 80X
     from Configuration.AlCa.autoCond import autoCond
-    process.GlobalTag.globaltag = '102X_dataRun2_Prompt_v4'
+    process.GlobalTag.globaltag = '101X_dataRun2_Prompt_v9'
     process.load('EGTagAndProbe.EGTagAndProbe.tagAndProbe_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(
@@ -110,7 +110,7 @@ if not isMC: # will use 80X
         ),
     )
 else:
-    process.GlobalTag.globaltag = '102X_mcRun2_asymptotic_v3'   # Marina
+    process.GlobalTag.globaltag = '101X_mcRun2_asymptotic_v5'   # Marina
     process.load('EGTagAndProbe.EGTagAndProbe.MCanalysis_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(            
