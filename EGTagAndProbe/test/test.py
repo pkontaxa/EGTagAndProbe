@@ -16,7 +16,7 @@ reportEvery = 100
 outputFile = 'NTuple.root'
 
 if isMC:
-    globaltag = '102X_mcRun2_asymptotic_v3'
+    globaltag = '110X_mcRun2_asymptotic_v6'
     datasetFiles = [
         '/store/mc/RunIIFall18MiniAOD/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/MINIAODSIM/102X_upgrade2018_realistic_v12_ext1-v1/60000/70E5316E-7F73-C94E-A6FC-9014BC36BDF0.root',
         '/store/mc/RunIIFall18MiniAOD/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/MINIAODSIM/102X_upgrade2018_realistic_v12_ext1-v1/60000/70D11899-0FC2-5F4E-8E31-3586B5619B31.root',
@@ -24,7 +24,7 @@ if isMC:
         '/store/mc/RunIIFall18MiniAOD/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/MINIAODSIM/102X_upgrade2018_realistic_v12_ext1-v1/60000/6DD6961E-C425-2B40-85F3-6082BB81D010.root',
         ]
 else:
-    globaltag = '102X_dataRun2_Prompt_v4'
+    globaltag = '110X_dataRun2_v12'
     datasetFiles = [
         '/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/879/00000/7E4C974F-7EAE-E811-8701-FA163E735012.root',
         '/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/879/00000/78AF9DC9-78AE-E811-8171-FA163E529D85.root',

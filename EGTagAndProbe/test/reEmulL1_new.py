@@ -110,7 +110,7 @@ import FWCore.Utilities.FileUtils as FileUtils
 # Marina
 if not isMC: # will use 80X
     from Configuration.AlCa.autoCond import autoCond
-    process.GlobalTag.globaltag = '101X_dataRun2_Prompt_v9'
+    process.GlobalTag.globaltag = '110X_dataRun2_v12'
 
 #Martin's addition (not necessary for me)
 
@@ -148,7 +148,7 @@ if isMINIAOD:
 ######################################################################################################
 
 else:
-    process.GlobalTag.globaltag = '101X_mcRun2_asymptotic_v5'
+    process.GlobalTag.globaltag = '110X_mcRun2_asymptotic_v6'
     process.load('EGTagAndProbe.EGTagAndProbe.MCanalysis_cff')
     process.source = cms.Source("PoolSource",
             fileNames = cms.untracked.vstring(
