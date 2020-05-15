@@ -3,9 +3,13 @@ import FWCore.PythonUtilities.LumiList as LumiList
 import FWCore.ParameterSet.Config as cms
 from Configuration.StandardSequences.Eras import eras
 
-isMC = True
+isMC = False
+isMINIAOD = True
+globalTagMC   = "110X_mcRun2_asymptotic_v6"
+globalTagData = "110X_dataRun2_v12"
+caloParams    = "caloParams_2018_v1_2"
 
-process = cms.Process("TagAndProbe",eras.Run2_2016)
+process = cms.Process("TagAndProbe", eras.Run2_2018)
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 process.load('Configuration.StandardSequences.RawToDigi_Data_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
@@ -37,70 +41,127 @@ options.maxEvents  = -999
 
 options.parseArguments()
 
-import FWCore.Utilities.FileUtils as FileUtils
-listSecondaryFiles = FileUtils.loadListFromFile (options.secondaryFilesList)
+#import FWCore.Utilities.FileUtils as FileUtils
+#listSecondaryFiles = FileUtils.loadListFromFile (options.secondaryFilesList)
+ 
+# START ELECTRON CUT BASED ID SECTION
+#
+# Set up everything that is needed to compute electron IDs and
+# add the ValueMaps with ID decisions into the event data stream
+#
+
+# Load tools and function definitions
+from PhysicsTools.SelectorUtils.tools.vid_id_tools import *
+
+from RecoEgamma.ElectronIdentification.egmGsfElectronIDs_cfi import *
+from PhysicsTools.SelectorUtils.centralIDRegistry import central_id_registry
+
+process.load("RecoEgamma.ElectronIdentification.ElectronMVAValueMapProducer_cfi")
+
+#**********************
+dataFormat = DataFormat.AOD
+if isMINIAOD:
+    dataFormat = DataFormat.MiniAOD
+switchOnVIDElectronIdProducer(process, dataFormat)
+#**********************
+
+process.load("RecoEgamma.ElectronIdentification.egmGsfElectronIDs_cfi")
+# overwrite a default parameter: for miniAOD, the collection name is a slimmed one
+if isMINIAOD:
+    process.egmGsfElectronIDs.physicsObjectSrc = cms.InputTag('slimmedElectrons')
+
+from PhysicsTools.SelectorUtils.centralIDRegistry import central_id_registry
+process.egmGsfElectronIDSequence = cms.Sequence(process.egmGsfElectronIDs)
+
+# Define which IDs we want to produce
+# Each of these two example IDs contains all four standard 
+my_id_modules =[
+'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Fall17_iso_V1_cff'
+] 
+
+
+#Add them to the VID producer
+for idmod in my_id_modules:
+    setupAllVIDIdsInModule(process,idmod,setupVIDElectronSelection)
+
+from RecoEgamma.ElectronIdentification.ElectronMVAValueMapProducer_cfi import *
+
+egmGsfElectronIDTask = cms.Task(
+    #electronMVAVariableHelper,
+    electronMVAValueMapProducer,
+    egmGsfElectronIDs
+)
+egmGsfElectronIDSequence = cms.Sequence(egmGsfElectronIDTask)
 
 if not isMC: # will use 80X
     from Configuration.AlCa.autoCond import autoCond
-    process.GlobalTag.globaltag = '80X_dataRun2_Prompt_v8'
-    process.load('TauTagAndProbe.TauTagAndProbe.tagAndProbe_cff')
+    process.GlobalTag.globaltag = globalTagData
+    process.load('EGTagAndProbe.EGTagAndProbe.tagAndProbe_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(
-            '/store/data/Run2016B/SingleMuon/MINIAOD/PromptReco-v2/000/274/199/00000/7005DB70-4C28-E611-8628-02163E0144DD.root',
+            '/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/325/172/00000/DDCDF0D5-6217-3948-B73B-E812BCCEBAF1.root',
         ),
-
-        secondaryFileNames = cms.untracked.vstring(listSecondaryFiles)
-        #secondaryFileNames = cms.untracked.vstring('file:AA918EB1-6E64-E611-9BE0-00259074AE54.root')
-            #'/store/mc/RunIISpring16MiniAODv2/GluGluHToTauTau_M125_13TeV_powheg_pythia8/MINIAODSIM/FlatPU20to70HcalNZSRAW_withHLT_80X_mcRun2_asymptotic_v14-v1/50000/302E52FC-8567-E611-B2AA-0CC47A703326.root',
-            #),
-#            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/6E300626-5E26-E611-980B-02163E0119A2.root',
-#            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/08F68A47-5D26-E611-B042-02163E012239.root',
-#            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/1011D344-5E26-E611-ABC4-02163E011CF0.root',
-#            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/1E3EFD43-5E26-E611-AE17-02163E0146FF.root',
-#            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/2EA6473B-5E26-E611-B82A-02163E011EAC.root',
-#            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/3CD7BB24-5D26-E611-88A3-02163E014736.root',
-#            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/3CE74444-5E26-E611-8CE6-02163E012545.root',
-#            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/488D1A44-5E26-E611-8057-02163E014285.root',
-#            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/5EECA846-5D26-E611-A99C-02163E01432B.root',
-#            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/7C7FB848-5E26-E611-8A06-02163E014167.root',
-#            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/86E8DC25-5D26-E611-9827-02163E014713.root',
-#            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/A4B22F44-5E26-E611-AFDA-02163E0141F3.root',
-#            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/BA326B3B-5E26-E611-A6E0-02163E0124FA.root',
-#            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/BADC0417-5D26-E611-872F-02163E012A7E.root',
-#            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/C813CA24-5E26-E611-B7A2-02163E011F93.root',
-#            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/E251C323-5E26-E611-825D-02163E011A0F.root',
-#            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/E8FD1844-5E26-E611-B99E-02163E0146CB.root',
-#            '/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/F8B44816-5E26-E611-A87A-02163E011E74.root',
-#        ) 
+        secondaryFileNames = cms.untracked.vstring(
+            '/store/data/Run2018D/EGamma/RAW/v1/000/325/172/00000/24CBAFE6-3FA1-6E43-AB6E-6CD135928C89.root',
+            '/store/data/Run2018D/EGamma/RAW/v1/000/325/172/00000/DF2255BF-FD87-314D-B1E1-2833CCDA2710.root',
+            '/store/data/Run2018D/EGamma/RAW/v1/000/325/172/00000/2C891235-BE75-A54B-94DB-ABDCE766AEC5.root',
+            '/store/data/Run2018D/EGamma/RAW/v1/000/325/172/00000/447406C9-B5C7-C840-83FA-DAC632209105.root',
+            '/store/data/Run2018D/EGamma/RAW/v1/000/325/172/00000/1E2C3BE1-876F-A64D-A5EC-374244F12D7B.root',
+            '/store/data/Run2018D/EGamma/RAW/v1/000/325/172/00000/7C23F17B-89B7-B541-8680-80EA6173DA7F.root',
+            '/store/data/Run2018D/EGamma/RAW/v1/000/325/172/00000/003134B4-F570-0848-85F2-C1AE302D3591.root',
+            '/store/data/Run2018D/EGamma/RAW/v1/000/325/172/00000/091F0666-7D0A-D843-B4EA-AFEDDC9309B6.root',
+            '/store/data/Run2018D/EGamma/RAW/v1/000/325/172/00000/7F4658A2-54F7-4A4E-B59F-59DB70B1DBC5.root',
+            '/store/data/Run2018D/EGamma/RAW/v1/000/325/172/00000/E024A5DA-BD1D-AB46-A8FF-7A05BCDCDD1E.root',
+            '/store/data/Run2018D/EGamma/RAW/v1/000/325/172/00000/DFE754C6-28D0-9040-AE5A-184072684983.root',
+            '/store/data/Run2018D/EGamma/RAW/v1/000/325/172/00000/B8C60C09-8091-9E44-9E1A-F848181C24DD.root',
+            '/store/data/Run2018D/EGamma/RAW/v1/000/325/172/00000/E2179434-951B-E746-8730-8C67D5F6E369.root',
+        ),
     )
-
-    #process.source.eventsToProcess = cms.untracked.VEventRange('281613:108:12854629')
-    #process.source.eventsToProcess = cms.untracked.VEventRange('274199:353:670607108')
-
+    
 else:
-    #process.GlobalTag.globaltag = 'auto:run2_mc' #MC 25 ns miniAODv2
-    process.GlobalTag.globaltag = '80X_mcRun2_asymptotic_v14'
-    #process.GlobalTag.globaltag = '80X_mcRun2_asymptotic_2016_miniAODv2' #MC 25 ns miniAODv2
-    # process.GlobalTag.globaltag = '76X_dataRun2_16Dec2015_v0'
-    process.load('TauTagAndProbe.TauTagAndProbe.MCanalysis_cff')
+    process.GlobalTag.globaltag = globalTagMC
+    process.load('EGTagAndProbe.EGTagAndProbe.MCanalysis_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(
-            #'/store/mc/RunIISpring16DR80/GluGluHToTauTau_M125_13TeV_powheg_pythia8/GEN-SIM-RAW/FlatPU20to70HcalNZSRAW_withHLT_80X_mcRun2_asymptotic_v14-v1/40000/AA918EB1-6E64-E611-9BE0-00259074AE54.root'
-            '/store/mc/RunIISpring16MiniAODv2/GluGluHToTauTau_M125_13TeV_powheg_pythia8/MINIAODSIM/FlatPU20to70HcalNZSRAW_withHLT_80X_mcRun2_asymptotic_v14-v1/50000/1A13CB76-9B67-E611-A143-0050560210EC.root'
+            	#'/store/relval/CMSSW_10_6_8/RelValZEE_13/MINIAODSIM/PU25ns_106X_mcRun2_asymptotic_preVFP_v3_UL16_CP5_preVFP-v1/20000/FEF96392-3307-3B4F-9A4A-3571A8C54F26.root'
+		'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/MINIAODSIM/PU25ns_106X_mcRun2_asymptotic_preVFP_v5_UL16hltval_preVFP_v5-v1/10000/CCB6A88B-A1DE-4044-910A-B548D565AFC4.root'
+		#'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/MINIAODSIM/PU25ns_106X_mcRun2_asymptotic_preVFP_v5_UL16hltval_preVFP_v5-v1/10000/8943C7FE-7326-D64E-9D54-B4FB6EE9229D.root',
+		#'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/MINIAODSIM/PU25ns_106X_mcRun2_asymptotic_preVFP_v5_UL16hltval_preVFP_v5-v1/10000/362B166F-348C-1948-B1BB-F26AEABED9FB.root'
         ),
-       secondaryFileNames = cms.untracked.vstring(listSecondaryFiles)
-            #'/store/mc/RunIISummer15GS/GluGluHToTauTau_M125_13TeV_powheg_pythia8/GEN-SIM/MCRUN2_71_V1-v1/00000/08D2C535-5458-E511-B0C0-FA163E83549A.root'
-            #'/store/mc/RunIISummer15GS/GluGluHToTauTau_M125_13TeV_powheg_pythia8/GEN-SIM/MCRUN2_71_V1-v1/10000/8A2D3925-4658-E511-80B2-02163E014126.root',
-            #'/store/mc/RunIISummer15GS/GluGluHToTauTau_M125_13TeV_powheg_pythia8/GEN-SIM/MCRUN2_71_V1-v1/10000/ECB7FC03-8058-E511-BE9D-02163E0141A2.root',
-            #'/store/mc/RunIISummer15GS/GluGluHToTauTau_M125_13TeV_powheg_pythia8/GEN-SIM/MCRUN2_71_V1-v1/60000/4473DFF5-9456-E511-9C4B-002590494C8A.root',
-            #'/store/mc/RunIISummer15GS/GluGluHToTauTau_M125_13TeV_powheg_pythia8/GEN-SIM/MCRUN2_71_V1-v1/60000/587A9A92-A956-E511-AC52-0025904B11CC.root',
-            #'/store/mc/RunIISummer15GS/GluGluHToTauTau_M125_13TeV_powheg_pythia8/GEN-SIM/MCRUN2_71_V1-v1/60000/7076052C-4A57-E511-B371-00259074AE9A.root',
-            #'/store/mc/RunIISummer15GS/GluGluHToTauTau_M125_13TeV_powheg_pythia8/GEN-SIM/MCRUN2_71_V1-v1/60000/7CD6A6C7-9C56-E511-87E5-003048C75840.root',
-            #'/store/mc/RunIISummer15GS/GluGluHToTauTau_M125_13TeV_powheg_pythia8/GEN-SIM/MCRUN2_71_V1-v1/60000/7E281C8E-4357-E511-8498-00259074AE80.root',
-            #'/store/mc/RunIISummer15GS/GluGluHToTauTau_M125_13TeV_powheg_pythia8/GEN-SIM/MCRUN2_71_V1-v1/60000/98884797-4957-E511-82C6-00259073E504.root',
-            #'/store/mc/RunIISummer15GS/GluGluHToTauTau_M125_13TeV_powheg_pythia8/GEN-SIM/MCRUN2_71_V1-v1/60000/BE274E99-4957-E511-88ED-0025907A1A2E.root',
-
+       secondaryFileNames = cms.untracked.vstring(
+		'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/GEN-SIM-RAW/PU25ns_80X_mcRun2_asymptotic_v20_UL16hltval_preVFP_v5-v1/10000/A255DD0A-714F-EA11-BCEB-0CC47A4D75EC.root',
+		'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/GEN-SIM-RAW/PU25ns_80X_mcRun2_asymptotic_v20_UL16hltval_preVFP_v5-v1/10000/00FDEC5B-4C4F-EA11-8B31-0025905B85D6.root',
+		'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/GEN-SIM-RAW/PU25ns_80X_mcRun2_asymptotic_v20_UL16hltval_preVFP_v5-v1/10000/10EBA3B3-444F-EA11-9328-AC1F6BAC7D10.root',
+		'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/GEN-SIM-RAW/PU25ns_80X_mcRun2_asymptotic_v20_UL16hltval_preVFP_v5-v1/10000/366241A5-454F-EA11-B7C6-0CC47A4D75F2.root',
+		'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/GEN-SIM-RAW/PU25ns_80X_mcRun2_asymptotic_v20_UL16hltval_preVFP_v5-v1/10000/3EB877C6-494F-EA11-BF42-0CC47A4D7600.root',
+		'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/GEN-SIM-RAW/PU25ns_80X_mcRun2_asymptotic_v20_UL16hltval_preVFP_v5-v1/10000/40E0EA66-484F-EA11-B6E5-0025905A612E.root',
+		'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/GEN-SIM-RAW/PU25ns_80X_mcRun2_asymptotic_v20_UL16hltval_preVFP_v5-v1/10000/4436D4C2-494F-EA11-A1C9-0CC47A4C8F18.root',
+		'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/GEN-SIM-RAW/PU25ns_80X_mcRun2_asymptotic_v20_UL16hltval_preVFP_v5-v1/10000/4A55CE2B-764F-EA11-A940-0CC47A4D76C6.root',
+		'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/GEN-SIM-RAW/PU25ns_80X_mcRun2_asymptotic_v20_UL16hltval_preVFP_v5-v1/10000/F041AF46-4C4F-EA11-A210-0CC47A7452DA.root',
+		'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/GEN-SIM-RAW/PU25ns_80X_mcRun2_asymptotic_v20_UL16hltval_preVFP_v5-v1/10000/D0413658-514F-EA11-A0DA-0025905B85F6.root',
+		'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/GEN-SIM-RAW/PU25ns_80X_mcRun2_asymptotic_v20_UL16hltval_preVFP_v5-v1/10000/EADA2848-614F-EA11-AF89-0025905B8598.root',
+		'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/GEN-SIM-RAW/PU25ns_80X_mcRun2_asymptotic_v20_UL16hltval_preVFP_v5-v1/10000/8CD19F06-664F-EA11-9280-0CC47A4D7628.root',
+		'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/GEN-SIM-RAW/PU25ns_80X_mcRun2_asymptotic_v20_UL16hltval_preVFP_v5-v1/10000/8CD7B387-4D4F-EA11-839A-0025905B85D6.root',
+		'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/GEN-SIM-RAW/PU25ns_80X_mcRun2_asymptotic_v20_UL16hltval_preVFP_v5-v1/10000/BC9CA916-6A4F-EA11-BD3D-AC1F6BAC7C2A.root',
+		'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/GEN-SIM-RAW/PU25ns_80X_mcRun2_asymptotic_v20_UL16hltval_preVFP_v5-v1/10000/EE735DDC-464F-EA11-A8CE-0CC47A7C3408.root',
+		'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/GEN-SIM-RAW/PU25ns_80X_mcRun2_asymptotic_v20_UL16hltval_preVFP_v5-v1/10000/CEF45DE6-7B4F-EA11-B9EF-0CC47A7C354C.root',
+		'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/GEN-SIM-RAW/PU25ns_80X_mcRun2_asymptotic_v20_UL16hltval_preVFP_v5-v1/10000/BC234A3D-494F-EA11-A2D2-0CC47A4C8E28.root',
+		'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/GEN-SIM-RAW/PU25ns_80X_mcRun2_asymptotic_v20_UL16hltval_preVFP_v5-v1/10000/4ABB1E6C-484F-EA11-9F80-0025905A48FC.root',
+		'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/GEN-SIM-RAW/PU25ns_80X_mcRun2_asymptotic_v20_UL16hltval_preVFP_v5-v1/10000/7CA13DCE-864F-EA11-A60C-AC1F6BAC7D14.root',
+		'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/GEN-SIM-RAW/PU25ns_80X_mcRun2_asymptotic_v20_UL16hltval_preVFP_v5-v1/10000/50A5D0F3-644F-EA11-91DC-AC1F6BAC807A.root',
+		'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/GEN-SIM-RAW/PU25ns_80X_mcRun2_asymptotic_v20_UL16hltval_preVFP_v5-v1/10000/5698404B-904F-EA11-89F5-0CC47A4D7646.root',
+		'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/GEN-SIM-RAW/PU25ns_80X_mcRun2_asymptotic_v20_UL16hltval_preVFP_v5-v1/10000/7ADA49E9-414F-EA11-B0E3-AC1F6BAC7C78.root',
+		'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/GEN-SIM-RAW/PU25ns_80X_mcRun2_asymptotic_v20_UL16hltval_preVFP_v5-v1/10000/7E787757-634F-EA11-91F1-0CC47A4D7690.root',
+		'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/GEN-SIM-RAW/PU25ns_80X_mcRun2_asymptotic_v20_UL16hltval_preVFP_v5-v1/10000/8E11FA7C-624F-EA11-9696-0CC47A7C35D8.root',
+		'/store/relval/CMSSW_10_6_8/RelValZEE_13UP16/GEN-SIM-RAW/PU25ns_80X_mcRun2_asymptotic_v20_UL16hltval_preVFP_v5-v1/10000/B4732519-6D4F-EA11-867E-0025905B85AE.root'
+	)
     )
+    process.Ntuplizer.useHLTMatch = cms.bool(False) #In case no HLT object in MC sample considered or you're fed up with trying to find the right HLT collections
+
+if isMINIAOD:
+    process.Ntuplizer.electrons = cms.InputTag("slimmedElectrons")
+    process.Ntuplizer.genParticles = cms.InputTag("prunedGenParticles")
+    process.Ntuplizer.Vertices = cms.InputTag("offlineSlimmedPrimaryVertices")
 
 process.schedule = cms.Schedule()
 
@@ -115,12 +176,15 @@ else:
     from L1Trigger.Configuration.customiseUtils import L1TTurnOffUnpackStage2GtGmtAndCalo 
     process = L1TTurnOffUnpackStage2GtGmtAndCalo(process)
 
-process.load("L1Trigger.L1TCalorimeter.caloStage2Params_2016_v3_2_cfi")
+
+process.load("L1Trigger.L1TCalorimeter.%s_cfi" % (caloParams))
+#process.load("L1Trigger.L1TCalorimeter.caloStage2Params_2016_v3_3_1_2018_EcalSF_cfi")
+#process.load("L1Trigger.L1TCalorimeter.caloStage2Params_2016_v3_3_1_2018_EcalSF_EGcalib_cfi")
+#process.load("L1Trigger.L1TCalorimeter.caloStage2Params_2016_v2_2_cfi")
+
 
 #### handling of cms line options for tier3 submission
 #### the following are dummy defaults, so that one can normally use the config changing file list by hand etc.
-
-
 
 if options.JSONfile:
     print "Using JSON: " , options.JSONfile
@@ -143,7 +207,7 @@ process.options = cms.untracked.PSet(
 )
 
 process.p = cms.Path (
-    process.TAndPseq  +
+    process.egmGsfElectronIDSequence +
     process.RawToDigi +
     process.L1TReEmul +
     process.NtupleSeq
