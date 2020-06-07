@@ -1,15 +1,28 @@
+#=====================================
+# User Imports
+#=====================================
 import FWCore.ParameterSet.VarParsing as VarParsing
 import FWCore.PythonUtilities.LumiList as LumiList
 import FWCore.ParameterSet.Config as cms
 from Configuration.StandardSequences.Eras import eras
 
-isMC = False
-isMINIAOD = True
+#=====================================
+# Options
+#=====================================
+isMC          = False
+isMINIAOD     = True
+year          = "2018"
 globalTagMC   = "110X_mcRun2_asymptotic_v6"
-globalTagData = "110X_dataRun2_v12"
+globalTagData = "110X_dataRun2_v12" 
 caloParams    = "caloParams_2018_v1_2"
 
-process = cms.Process("TagAndProbe", eras.Run2_2018)
+if year == "2016":
+    process = cms.Process("TagAndProbe", eras.Run2_2016)
+elif year == "2017":
+    process = cms.Process("TagAndProbe", eras.Run2_2017)
+else:
+    process = cms.Process("TagAndProbe", eras.Run2_2018)
+
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 process.load('Configuration.StandardSequences.RawToDigi_Data_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
@@ -18,7 +31,10 @@ process.load('Configuration.StandardSequences.Services_cff')
 process.load('SimGeneral.HepPDTESSource.pythiapdt_cfi')
 process.load('FWCore.MessageService.MessageLogger_cfi')
 process.load('Configuration.EventContent.EventContent_cff')
-process.load('Configuration.Geometry.GeometryExtended2016Reco_cff')
+if year == "2016":
+    process.load('Configuration.Geometry.GeometryExtended2016Reco_cff')
+else:
+    process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cff')
 
 
@@ -93,33 +109,39 @@ egmGsfElectronIDTask = cms.Task(
 )
 egmGsfElectronIDSequence = cms.Sequence(egmGsfElectronIDTask)
 
-if not isMC: # will use 80X
+if not isMC:
     from Configuration.AlCa.autoCond import autoCond
     process.GlobalTag.globaltag = globalTagData
     process.load('EGTagAndProbe.EGTagAndProbe.tagAndProbe_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(
-            '/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/325/172/00000/DDCDF0D5-6217-3948-B73B-E812BCCEBAF1.root',
+            '/store/data/Run2018D/EGamma/MINIAOD/22Jan2019-v2/110000/10A4CCCC-3FB2-7F4B-841C-926A03DFBC61.root'
         ),
+
         secondaryFileNames = cms.untracked.vstring(
-            '/store/data/Run2018D/EGamma/RAW/v1/000/325/172/00000/24CBAFE6-3FA1-6E43-AB6E-6CD135928C89.root',
-            '/store/data/Run2018D/EGamma/RAW/v1/000/325/172/00000/DF2255BF-FD87-314D-B1E1-2833CCDA2710.root',
-            '/store/data/Run2018D/EGamma/RAW/v1/000/325/172/00000/2C891235-BE75-A54B-94DB-ABDCE766AEC5.root',
-            '/store/data/Run2018D/EGamma/RAW/v1/000/325/172/00000/447406C9-B5C7-C840-83FA-DAC632209105.root',
-            '/store/data/Run2018D/EGamma/RAW/v1/000/325/172/00000/1E2C3BE1-876F-A64D-A5EC-374244F12D7B.root',
-            '/store/data/Run2018D/EGamma/RAW/v1/000/325/172/00000/7C23F17B-89B7-B541-8680-80EA6173DA7F.root',
-            '/store/data/Run2018D/EGamma/RAW/v1/000/325/172/00000/003134B4-F570-0848-85F2-C1AE302D3591.root',
-            '/store/data/Run2018D/EGamma/RAW/v1/000/325/172/00000/091F0666-7D0A-D843-B4EA-AFEDDC9309B6.root',
-            '/store/data/Run2018D/EGamma/RAW/v1/000/325/172/00000/7F4658A2-54F7-4A4E-B59F-59DB70B1DBC5.root',
-            '/store/data/Run2018D/EGamma/RAW/v1/000/325/172/00000/E024A5DA-BD1D-AB46-A8FF-7A05BCDCDD1E.root',
-            '/store/data/Run2018D/EGamma/RAW/v1/000/325/172/00000/DFE754C6-28D0-9040-AE5A-184072684983.root',
-            '/store/data/Run2018D/EGamma/RAW/v1/000/325/172/00000/B8C60C09-8091-9E44-9E1A-F848181C24DD.root',
-            '/store/data/Run2018D/EGamma/RAW/v1/000/325/172/00000/E2179434-951B-E746-8730-8C67D5F6E369.root',
-        ),
+	'/store/data/Run2018D/EGamma/RAW/v1/000/321/233/00000/7A7B417B-969F-E811-9CC0-FA163EC80159.root',
+	'/store/data/Run2018D/EGamma/RAW/v1/000/321/233/00000/9012D37D-969F-E811-913B-FA163EAF7E70.root',
+	'/store/data/Run2018D/EGamma/RAW/v1/000/321/414/00000/004596BD-BBA2-E811-A445-FA163EB5B1F7.root',
+	'/store/data/Run2018D/EGamma/RAW/v1/000/321/414/00000/C603AEE4-BBA2-E811-AE3E-FA163EFF1C10.root',
+	'/store/data/Run2018D/EGamma/RAW/v1/000/321/887/00000/4210A02C-83AA-E811-A2FC-FA163E6CD89F.root',
+	'/store/data/Run2018D/EGamma/RAW/v1/000/321/887/00000/18A5473E-82AA-E811-816D-02163E014BB9.root',
+	'/store/data/Run2018D/EGamma/RAW/v1/000/321/887/00000/102E6C7D-7FAA-E811-892E-FA163ED1C998.root',
+	'/store/data/Run2018D/EGamma/RAW/v1/000/321/414/00000/F21A0D70-BBA2-E811-A608-FA163EAEFBE1.root',
+	'/store/data/Run2018D/EGamma/RAW/v1/000/321/414/00000/E675C0A9-BBA2-E811-810D-FA163E5ACC8E.root',
+	'/store/data/Run2018D/EGamma/RAW/v1/000/321/233/00000/A8C98583-969F-E811-B653-FA163E8E54FF.root',
+	'/store/data/Run2018D/EGamma/RAW/v1/000/321/887/00000/50D37695-81AA-E811-8B09-FA163E3116C8.root',
+	'/store/data/Run2018D/EGamma/RAW/v1/000/321/887/00000/5E4E4A7C-7FAA-E811-B494-FA163E8A6FB6.root',
+	'/store/data/Run2018D/EGamma/RAW/v1/000/321/887/00000/F404327D-81AA-E811-B1EF-FA163E818EF8.root',
+	'/store/data/Run2018D/EGamma/RAW/v1/000/321/887/00000/F847F781-7FAA-E811-BF05-FA163EC968BB.root',
+	'/store/data/Run2018D/EGamma/RAW/v1/000/325/057/00000/66BBB3F2-EB2F-7746-A8FE-3C865C2E652E.root',
+	'/store/data/Run2018D/EGamma/RAW/v1/000/325/057/00000/4A0AB096-D0D7-524C-A5C1-69A429C5F609.root',
+	'/store/data/Run2018D/EGamma/RAW/v1/000/321/233/00000/1C47877C-969F-E811-830E-FA163E346E5B.root',
+	'/store/data/Run2018D/EGamma/RAW/v1/000/321/887/00000/4618ECCB-81AA-E811-8EAF-FA163E22EC2E.root'
+	)
     )
-    
+
 else:
-    process.GlobalTag.globaltag = globalTagMC
+    process.GlobalTag.globaltag = globalTagMC  #'106X_mcRun2_asymptotic_preVFP_v5'
     process.load('EGTagAndProbe.EGTagAndProbe.MCanalysis_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(
@@ -177,10 +199,10 @@ else:
     process = L1TTurnOffUnpackStage2GtGmtAndCalo(process)
 
 
-process.load("L1Trigger.L1TCalorimeter.%s_cfi" % (caloParams))
+#process.load("L1Trigger.L1TCalorimeter.caloStage2Params_2016_v2_2_cfi")
 #process.load("L1Trigger.L1TCalorimeter.caloStage2Params_2016_v3_3_1_2018_EcalSF_cfi")
 #process.load("L1Trigger.L1TCalorimeter.caloStage2Params_2016_v3_3_1_2018_EcalSF_EGcalib_cfi")
-#process.load("L1Trigger.L1TCalorimeter.caloStage2Params_2016_v2_2_cfi")
+process.load("L1Trigger.L1TCalorimeter.%s_cfi" % (caloParams))
 
 
 #### handling of cms line options for tier3 submission
@@ -194,7 +216,7 @@ if options.inputFiles:
     process.source.fileNames = cms.untracked.vstring(options.inputFiles)
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(-1)
+    input = cms.untracked.int32(100)
 )
 
 if options.maxEvents >= -1:
