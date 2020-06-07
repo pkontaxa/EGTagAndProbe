@@ -78,14 +78,14 @@ if __name__ == '__main__':
     #================================================================================================
     config.section_("JobType")
     config.JobType.pluginName = 'Analysis'
-    config.JobType.psetName   = 'reEmulL1_new.py'    # Options = ['reEmulL1_new.py', 'test.py']
+    config.JobType.psetName   = 'reEmulL1.py'    # Options = ['reEmulL1_new.py', 'test.py']
     
     #================================================================================================
     # Data Section: Contains all parameters related to the data to be analyzed (incl. splitting params)
     #================================================================================================
     config.section_("Data")
     config.Data.inputDBS      = 'global'
-    config.Data.outLFNDirBase = '/store/user/mkolosov/CRAB3_TransferData/L1EG/Performance/Aug30/Emulated/'
+    config.Data.outLFNDirBase = '/store/user/mkolosov/CRAB3_TransferData/L1EG/'
     config.Data.splitting     = 'EventAwareLumiBased'
     config.Data.publication   = False
     config.Data.totalUnits    = -1    
